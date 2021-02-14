@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <meta name="description" content="Hexo">
+  <link rel="icon" href="/img/sanji.jpg">
+  <title>跳表</title>
+  
+  
+  <meta property="og:title" content="跳表">
+  
+  
+  <meta property="og:url" content="http://example.com/2020/07/04/skipList/index.html">
+  
+  
+  <meta property="og:img" content="/img/sanji.jpg">
+  
+  
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:published_time" content="2020-07-04">
+  <meta property="og:article:modified_time" content="2021-02-14">
+  <meta property="og:article:author" content="懒懒懒蜗牛">
+  
+  
+  <meta property="og:article:tag" content="algs">
+  
+  <meta property="og:article:tag" content="java">
+  
+  
+  
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+  <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+<link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/img/sanji.jpg" alt="logo">
+      
+      <span class="navbar-logo-dsc">懒蜗牛笔记</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">
+    
+    Home
+    
+    </a>
+    
+    <a href="/archives" class="navbar-menu-item">
+    
+    Archive
+    
+    </a>
+    
+    <a href="/tags" class="navbar-menu-item">
+    
+    Tags
+    
+    </a>
+    
+    <a href="/categories" class="navbar-menu-item">
+    
+    Categories
+    
+    </a>
+    
+    <a href="/about" class="navbar-menu-item">
+    
+    About
+    
+    </a>
+    
+    <a href="/links" class="navbar-menu-item">
+    
+    Friends
+    
+    </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+    <a class="navbar-menu-item searchnavbar" id="search"><i class="iconfont icon-search" style="font-size: 1.2rem; font-weight: 400;"></i></a>
+  </div>
+</nav>
+    
+    <div id="local-search" style="display: none;">
+      <input class="navbar-menu-item" id="search-input" placeholder="请输入搜索内容...">
+      <div id="search-content"></div>
+    </div>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      跳表
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2020-07-04T15:01:39.000Z">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2020-07-04</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/algs/" class="post-meta-link">algs</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>3.2k words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/algs/" class="post-meta-link">algs</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/java/" class="post-meta-link">java</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <h2 id="算法-amp-数据结构"><a href="#算法-amp-数据结构" class="headerlink" title="算法 &amp; 数据结构"></a>算法 &amp; 数据结构</h2><p>$$程序 = 算法 + 数据结构$$<br>TAOCP中，Donald并没有直接给出“算法”的定义，而是在用了几页的篇幅追溯了一番“Algorithms”这个词的起源以尝试让读者理解它的含义之后，用了欧几里得求解两个正整数最大公因子的例子做阐述：</p>
+<!-- <img src="/2020/07/04/skipList/Euclid-algorithm.png"  lozad post-imageclass="" title="欧几里得算法" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2020/07/04/skipList/Euclid-algorithm.png"> -->
+
+<p>其中最重要的是→，赋值/代替。<br>他的学生、红皮算法书的作者-Robert Sedgewick沿用这个例子并尝试给出了一个定义：The term algorithm is used in computer science to describe a <strong>finite</strong>, <strong>deterministic</strong>, and <strong>effective</strong> problem-solving method suitable for implementation as a computer program.<br>同时指出了二者之间的关系：大多数算法需要适当地组织数据，<strong>为了组织数据就产生了数据结构</strong>。一脉相承的观点是，数据结构是算法的副产品/结果（data structures exist as the byproducts or end products of algorithms）。</p>
+<details>
+  <summary>数据结构的作用</summary>
+
+<h2 id="数据结构的作用"><a href="#数据结构的作用" class="headerlink" title="数据结构的作用"></a>数据结构的作用</h2><p>前面说算法需要组织数据，所谓组织，其实就是操作（增、删、改、查）。有关数据结构和算法的课程对中所涉及到的数据结构：数组、链表；以及以前面两者为基础的高级数据结构：堆、树、图；延展开到特定领域/方向上优化的数据结构：各种队列，红黑树，B、B+树，拓扑图等等。<br>所有的数据结构的目的都是在特定场景下，优化数据的操作效率。可以用算法书给的demo跑一遍十几条排序算法的效率，便能直观感受到，即使在现在这样高性能的计算机面前，$n^2$ → $n\log(n)$所带来巨大效率的提升；而在特定场景下，采用位图、$O(n)$复杂度的排序算法所能带来的更可观的空间、时间上的节省。<br>绝大多数场景下，我们期待的数据结构是：在保持“有序”的前提下，满足高效的增、删、查操作。其中“有序”是一个相对的概念，堆、单端/双端队列、查找树、拓扑图等，都满足以我们所期待的方式的有序性、或者我们所关心的那部分数据的有序性。</p>
+</details>
+
+<h2 id="哈希、红黑树、跳表"><a href="#哈希、红黑树、跳表" class="headerlink" title="哈希、红黑树、跳表"></a>哈希、红黑树、跳表</h2><p>这里关注K-V型数据结构。</p>
+<h3 id="合适的数据结构"><a href="#合适的数据结构" class="headerlink" title="合适的数据结构"></a>合适的数据结构</h3><p>关注以下速查表数据。<br><img src="/.com//%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E6%9D%82%E5%BA%A6.png" alt="数据结构复杂度" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E6%9D%82%E5%BA%A6.png" class="lozad post-image"><br>其中，常用的key-value数据结构有三种：<br>Hash表：插入、查找最快，为$O(1)$；如使用链表实现则可实现无锁；数据有序化需要显式的排序操作。<br>红黑树：插入、查找为$\log(n)$，但常数项较小；无锁实现的复杂性很高，一般需要加锁；数据天然有序。<br>SkipList：插入、查找为$\log(n)$，但常数项比红黑树要大；底层结构为链表，可无锁实现；数据天然有序。</p>
+<ul>
+<li>首先，如果能确定某些数据是静态的，以ACA为例，我们的文案数据目前就可以看成是静态的：可能有描述上的调整，但频次很低，并且数据量不大。这部分数据如果采用直接加载到内存或是中间缓存的话，结构化为HashMap是不错的选择；</li>
+<li>如前所述，大部分数据操作场景是需要增删改操作的，而非仅仅只有读操作。这里不再讨论堆、队列等使用场景，专注通常情况下的<strong>数据的存取操作</strong>，此时需要兼顾读取、和操作后恢复有序的效率，此时Hash表不再是好的选择：迭代、修改操作的时间复杂度比较高，而红黑树则能很好地满足功能需求；</li>
+</ul>
+<h2 id="为什么还要有跳表"><a href="#为什么还要有跳表" class="headerlink" title="为什么还要有跳表"></a>为什么还要有跳表</h2><p>作为平衡树的一种替代实现，跳表主要拥有以下优势：</p>
+<ul>
+<li><p><strong>更简单的实现</strong><br>红黑树增删改元素需要进行旋转、变色，实现起来比较复杂，需要考虑的细节也比较多，到了并发场景下更难以写出可用且高效的红黑树实现；而跳表实现原理相当简单，就是升级版的链表，把链表的某一些元素随机抽出来再组成一个链表，作为一级索引，在该索引集中再次进行抽取，再做一级索引，依次实现多级链表索引，就组成了一个跳表。</p>
+</li>
+<li><p><strong>为了解决在高并发下，红黑树的锁实现导致的可能的死锁和并发度降低问题</strong>。<br>首先这句话意味着，在单线程、低线程数场景下，红黑树可能是更好的选择：以jdk11为例，ConcurrentHashMap存取速度是ConcurrentSkipListMap的4倍左右，而随着并发的线程数增多，后者的性能优势会逐渐体现出来，它的存取时间复杂度几乎和线程数无关，且无锁开销。</p>
+</li>
+</ul>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>上述可见跳表也是一种典型的“空间换时间”的数据结构。其底层采用二维链表，而非通常采用的数组实现。基本特点：</p>
+<ul>
+<li>由很多层结构组成；</li>
+<li>每一层都是一个有序的链表；</li>
+<li>最底层(Level 1)的链表包含所有元素；</li>
+<li>如果一个元素出现在 Level i 的链表中，则它在 Level i 之下的链表也都会出现；</li>
+<li>每个节点包含两个指针，一个指向同一链表中的下一个元素，一个指向下面一层的元素。<br><img src="/.com//Skip_list.svg" alt="跳表结构" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//Skip_list.svg" class="lozad post-image"></li>
+</ul>
+<h2 id="跳表实现"><a href="#跳表实现" class="headerlink" title="跳表实现"></a>跳表实现</h2><h3 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h3><p>考虑一个链表：<br><img src="/.com//skipList%E6%9E%84%E9%80%A0-1.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//skipList%E6%9E%84%E9%80%A0-1.jpg" class="lozad post-image"><br>从该有序表中搜索元素&lt; 23, 43, 59&gt;，需要比较的次数分别为&lt; 2, 4, 6 &gt;，总共比较的次数为 2 + 4 + 6 = 12 次。<br>有没有优化的算法？链表是有序的，但不能使用二分查找。类似二叉搜索树，我们把一些节点提取出来，作为索引。得到如下结构：<br><img src="/.com//skipList%E6%9E%84%E9%80%A0-2.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//skipList%E6%9E%84%E9%80%A0-2.jpg" class="lozad post-image"><br>这里把&lt; 14, 34, 50, 72 &gt;提取出来作为一级索引，这样搜索的时候就可以减少比较次数了。还可以再从一级索引提取一些元素出来，作为二级索引，变成如下结构：<br><img src="/.com//skipList%E6%9E%84%E9%80%A0-3.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//skipList%E6%9E%84%E9%80%A0-3.jpg" class="lozad post-image"></p>
+<details>
+  <summary>节点类</summary>
+
+<pre class="highlight"><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> K key; <span class="comment">// currently, never detached</span></span><br><span class="line">    V val;</span><br><span class="line">    Node&lt;K,V&gt; next;</span><br><span class="line">    Node(K key, V value, Node&lt;K,V&gt; next) &#123;</span><br><span class="line">        <span class="keyword">this</span>.key = key;</span><br><span class="line">        <span class="keyword">this</span>.val = value;</span><br><span class="line">        <span class="keyword">this</span>.next = next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+<p>redis 使用C实现，详见：<a target="_blank" rel="noopener" href="https://github.com/antirez/redis/blob/unstable/src/server.h">https://github.com/antirez/redis/blob/unstable/src/server.h</a></p>
+</details>
+
+<h3 id="搜索元素"><a href="#搜索元素" class="headerlink" title="搜索元素"></a>搜索元素</h3><p>查找元素 117：<br><img src="/.com//skipList%E6%9F%A5%E6%89%BE.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//skipList%E6%9F%A5%E6%89%BE.jpg" class="lozad post-image"></p>
+<ol>
+<li>比较21，比 21 大，往后面找</li>
+<li>比较37，比 37大，比链表最大值小，从 37 的下面一层开始找</li>
+<li>比较71，比 71 大，比链表最大值小，从 71 的下面一层开始找</li>
+<li>比较85，比 85 大，从后面找</li>
+<li>比较117，等于 117， 找到了节点。</li>
+</ol>
+<details>
+  <summary>搜索</summary>
+
+<pre class="highlight"><span class="line"><span class="function"><span class="keyword">private</span> Node&lt;K,V&gt; <span class="title">findNode</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(); <span class="comment">// don&#x27;t postpone errors</span></span><br><span class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cmp = comparator;</span><br><span class="line">    Node&lt;K,V&gt; b;</span><br><span class="line">    outer: <span class="keyword">while</span> ((b = findPredecessor(key, cmp)) != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            Node&lt;K,V&gt; n; K k; V v; <span class="keyword">int</span> c;</span><br><span class="line">            <span class="keyword">if</span> ((n = b.next) == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">break</span> outer;               <span class="comment">// empty</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> ((k = n.key) == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">break</span>;                     <span class="comment">// b is deleted</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> ((v = n.val) == <span class="keyword">null</span>)</span><br><span class="line">                unlinkNode(b, n);          <span class="comment">// n is deleted</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> ((c = cpr(cmp, key, k)) &gt; <span class="number">0</span>)</span><br><span class="line">                b = n;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> n;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span> outer;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre>
+</details>
+
+<h3 id="新增元素"><a href="#新增元素" class="headerlink" title="新增元素"></a>新增元素</h3><p>先确定该元素要占据的层数 K（丢硬币，随机），然后在 Level 1 … Level K 各个层的链表都插入元素：<br>插入 119， K = 2<br><img src="/.com//skipList%E6%96%B0%E5%A2%9E-1.jpg" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//skipList%E6%96%B0%E5%A2%9E-1.jpg" class="lozad post-image"><br>其中，然随机变量 K 满足参数为 $p = 1/2$ 的几何分布，期望值 $E[K] = 1/p = 2$。即各个元素的层数，期望值是 2 层。<br><img src="/.com//Skip_list_add_element.gif" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//Skip_list_add_element.gif" class="lozad post-image"></p>
+<details>
+  <summary>插入</summary>
+
+<pre class="highlight"><span class="line"><span class="function"><span class="keyword">private</span> V <span class="title">doPut</span><span class="params">(K key, V value, <span class="keyword">boolean</span> onlyIfAbsent)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cmp = comparator;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        Index&lt;K,V&gt; h; Node&lt;K,V&gt; b;</span><br><span class="line">        VarHandle.acquireFence();</span><br><span class="line">        <span class="keyword">int</span> levels = <span class="number">0</span>;                    <span class="comment">// number of levels descended</span></span><br><span class="line">        <span class="keyword">if</span> ((h = head) == <span class="keyword">null</span>) &#123;          <span class="comment">// try to initialize</span></span><br><span class="line">            Node&lt;K,V&gt; base = <span class="keyword">new</span> Node&lt;K,V&gt;(<span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">            h = <span class="keyword">new</span> Index&lt;K,V&gt;(base, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">            b = (HEAD.compareAndSet(<span class="keyword">this</span>, <span class="keyword">null</span>, h)) ? base : <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (Index&lt;K,V&gt; q = h, r, d;;) &#123; <span class="comment">// count while descending</span></span><br><span class="line">                <span class="keyword">while</span> ((r = q.right) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    Node&lt;K,V&gt; p; K k;</span><br><span class="line">                    <span class="keyword">if</span> ((p = r.node) == <span class="keyword">null</span> || (k = p.key) == <span class="keyword">null</span> ||</span><br><span class="line">                        p.val == <span class="keyword">null</span>)</span><br><span class="line">                        RIGHT.compareAndSet(q, r, r.right);</span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">if</span> (cpr(cmp, key, k) &gt; <span class="number">0</span>)</span><br><span class="line">                        q = r;</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> ((d = q.down) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    ++levels;</span><br><span class="line">                    q = d;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    b = q.node;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (b != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Node&lt;K,V&gt; z = <span class="keyword">null</span>;              <span class="comment">// new node, if inserted</span></span><br><span class="line">            <span class="keyword">for</span> (;;) &#123;                       <span class="comment">// find insertion point</span></span><br><span class="line">                Node&lt;K,V&gt; n, p; K k; V v; <span class="keyword">int</span> c;</span><br><span class="line">                <span class="keyword">if</span> ((n = b.next) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (b.key == <span class="keyword">null</span>)       <span class="comment">// if empty, type check key now</span></span><br><span class="line">                        cpr(cmp, key, key);</span><br><span class="line">                    c = -<span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> ((k = n.key) == <span class="keyword">null</span>)</span><br><span class="line">                    <span class="keyword">break</span>;                   <span class="comment">// can&#x27;t append; restart</span></span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> ((v = n.val) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    unlinkNode(b, n);</span><br><span class="line">                    c = <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> ((c = cpr(cmp, key, k)) &gt; <span class="number">0</span>)</span><br><span class="line">                    b = n;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="number">0</span> &amp;&amp;</span><br><span class="line">                         (onlyIfAbsent || VAL.compareAndSet(n, v, value)))</span><br><span class="line">                    <span class="keyword">return</span> v;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (c &lt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">                    NEXT.compareAndSet(b, n,</span><br><span class="line">                                       p = <span class="keyword">new</span> Node&lt;K,V&gt;(key, value, n))) &#123;</span><br><span class="line">                    z = p;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (z != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">int</span> lr = ThreadLocalRandom.nextSecondarySeed();</span><br><span class="line">                <span class="keyword">if</span> ((lr &amp; <span class="number">0x3</span>) == <span class="number">0</span>) &#123;       <span class="comment">// add indices with 1/4 prob</span></span><br><span class="line">                    <span class="keyword">int</span> hr = ThreadLocalRandom.nextSecondarySeed();</span><br><span class="line">                    <span class="keyword">long</span> rnd = ((<span class="keyword">long</span>)hr &lt;&lt; <span class="number">32</span>) | ((<span class="keyword">long</span>)lr &amp; <span class="number">0xffffffffL</span>);</span><br><span class="line">                    <span class="keyword">int</span> skips = levels;      <span class="comment">// levels to descend before add</span></span><br><span class="line">                    Index&lt;K,V&gt; x = <span class="keyword">null</span>;</span><br><span class="line">                    <span class="keyword">for</span> (;;) &#123;               <span class="comment">// create at most 62 indices</span></span><br><span class="line">                        x = <span class="keyword">new</span> Index&lt;K,V&gt;(z, x, <span class="keyword">null</span>);</span><br><span class="line">                        <span class="keyword">if</span> (rnd &gt;= <span class="number">0L</span> || --skips &lt; <span class="number">0</span>)</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">else</span></span><br><span class="line">                            rnd &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (addIndices(h, skips, x, cmp) &amp;&amp; skips &lt; <span class="number">0</span> &amp;&amp;</span><br><span class="line">                        head == h) &#123;         <span class="comment">// try to add new level</span></span><br><span class="line">                        Index&lt;K,V&gt; hx = <span class="keyword">new</span> Index&lt;K,V&gt;(z, x, <span class="keyword">null</span>);</span><br><span class="line">                        Index&lt;K,V&gt; nh = <span class="keyword">new</span> Index&lt;K,V&gt;(h.node, h, hx);</span><br><span class="line">                        HEAD.compareAndSet(<span class="keyword">this</span>, h, nh);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (z.val == <span class="keyword">null</span>)       <span class="comment">// deleted while adding indices</span></span><br><span class="line">                        findPredecessor(key, cmp); <span class="comment">// clean</span></span><br><span class="line">                &#125;</span><br><span class="line">                addCount(<span class="number">1L</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+</details>
+
+
+<h3 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h3><p>采用标准的链表删除即可。<br>删除 71<br><img src="/.com//skipList%E5%88%A0%E9%99%A4.jpg" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/.com//skipList%E5%88%A0%E9%99%A4.jpg" class="lozad post-image"></p>
+<details>
+  <summary>删除</summary>
+
+<pre class="highlight"><span class="line"><span class="function"><span class="keyword">final</span> V <span class="title">doRemove</span><span class="params">(Object key, Object value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cmp = comparator;</span><br><span class="line">    V result = <span class="keyword">null</span>;</span><br><span class="line">    Node&lt;K,V&gt; b;</span><br><span class="line">    outer: <span class="keyword">while</span> ((b = findPredecessor(key, cmp)) != <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                  result == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            Node&lt;K,V&gt; n; K k; V v; <span class="keyword">int</span> c;</span><br><span class="line">            <span class="keyword">if</span> ((n = b.next) == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">break</span> outer;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> ((k = n.key) == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> ((v = n.val) == <span class="keyword">null</span>)</span><br><span class="line">                unlinkNode(b, n);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> ((c = cpr(cmp, key, k)) &gt; <span class="number">0</span>)</span><br><span class="line">                b = n;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (c &lt; <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">break</span> outer;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (value != <span class="keyword">null</span> &amp;&amp; !value.equals(v))</span><br><span class="line">                <span class="keyword">break</span> outer;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (VAL.compareAndSet(n, v, <span class="keyword">null</span>)) &#123;</span><br><span class="line">                result = v;</span><br><span class="line">                unlinkNode(b, n);</span><br><span class="line">                <span class="keyword">break</span>; <span class="comment">// loop to clean up</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">        tryReduceLevel();</span><br><span class="line">        addCount(-<span class="number">1L</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre>
+</details>
+
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><ol>
+<li><p>jdk从1.6开始引入了两个跳表相关的实现类：ConcurrentSkipListMap、ConcurrentSkipListSet（基于ConcurrentSkipListMap），在jdk中主要是用于高并发场景下代替红黑树的实现，不过从jdk8开始，线程安全的Hash表：ConcurrentHashMap采用了CAS、取消分段锁改用大数组、哈希碰撞超过阈值时树化（红黑树）等手段进一步提升了线程安全Hash表相关实现，性能上也有了很大提升。</p>
+</li>
+<li><p>redis：redis的有序集合zset是采用跳表实现的。分析一下zset所支持的操作就不难理解为啥采用跳表而非红黑树了：</p>
+</li>
+</ol>
+<ul>
+<li>插入元素</li>
+<li>删除元素</li>
+<li>查找元素</li>
+<li>有序输出所有元素</li>
+<li>查找区间内所有元素<br>除了易于实现这个因素外。zset所支持的操作中，前4项红黑树都可以完成，且时间复杂度与跳表一致。但是，最后一项，红黑树的效率就没有跳表高了。在跳表中，要查找区间的元素，我们只要定位到两个区间端点在最低层级的位置，然后按顺序遍历元素就可以了，非常高效。而红黑树只能定位到端点后，再从首位置开始每次都要查找后继节点，相对来说是比较耗时的。</li>
+</ul>
+<ol start="3">
+<li><p>LevelDB：Google 开源的 key/value 存储引擎 LevelDB 以及 Facebook 基于 LevelDB 优化的 RocksDB 都是 LSM Tree 结构的数据库，内部的 MemTable 使用跳表实现。HBase MemStore 内部存储数据就使用的跳表。为什么呢？HBase 属于 LSM Tree 结构的数据库，LSM Tree 结构的数据库有个特点，实时写入的数据先写入到内存，内存达到阈值往磁盘 flush 的时候，会生成类似于 StoreFile 的有序文件，而跳表恰好就是天然有序的，所以在 flush 的时候效率很高，而且跳表查找、插入、删除性能都很高，这应该是 HBase MemStore 内部存储数据使用跳表的原因之一。HBase 使用的是 java.util.concurrent 下的 ConcurrentSkipListMap()。</p>
+</li>
+<li><p>ES：Lucene核心数据结构采用了跳表实现倒排表。使用FST保存词典，FST可以实现快速的Seek，这种结构在当查询可以表达成自动机时(PrefixQuery、FuzzyQuery、RegexpQuery等)效率很高。(可以理解成自动机取交集)此种场景主要用在对Query进行rewrite的时候。FST可以表达出Term倒排表所在的文件偏移。倒排表使用SkipList结构。从上面的讨论可知，求倒排表的交集、并集、差集需要各种SeekTo(docId)，SkipList能对Seek进行加速。</p>
+</li>
+</ol>
+<p>ref：<br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/256511/skip-list-vs-binary-search-tree">https://stackoverflow.com/questions/256511/skip-list-vs-binary-search-tree</a><br><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Skip_list">https://en.wikipedia.org/wiki/Skip_list</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/sunxianghuang/article/details/52221913">https://blog.csdn.net/sunxianghuang/article/details/52221913</a><br><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/imtinx-1291165">https://www.iteye.com/blog/imtinx-1291165</a><br>《algorithms》<br>《the art of computer programming》</p>
+
+  </div>
+  <div>
+  
+  <div class="post-note note-warning copyright" style="margin-top: 42px">
+    <p><span style="font-weight: bold;">作者：</span><a target="_blank" rel="nofollow noopener noreferrer" href="http://example.com/about">懒懒懒蜗牛</a></p>
+    <p><span style="font-weight: bold;">文章链接：</span><a target="_blank" rel="nofollow noopener noreferrer" href="http://example.com/2020/07/04/skipList/">http://example.com/2020/07/04/skipList/</a></p>
+    <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
+  </div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95-amp-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">算法 &amp; 数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">数据结构的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E3%80%81%E7%BA%A2%E9%BB%91%E6%A0%91%E3%80%81%E8%B7%B3%E8%A1%A8"><span class="toc-text">哈希、红黑树、跳表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">合适的数据结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89%E8%B7%B3%E8%A1%A8"><span class="toc-text">为什么还要有跳表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%A1%A8%E5%AE%9E%E7%8E%B0"><span class="toc-text">跳表实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0"><span class="toc-text">构造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%85%83%E7%B4%A0"><span class="toc-text">搜索元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E5%85%83%E7%B4%A0"><span class="toc-text">新增元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-text">删除元素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">适用场景</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/img/sanji.jpg" class="author-img">
+
+<p class="author-name">懒懒懒蜗牛</p>
+<p class="author-description">designed by theme-kaze</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>1</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>1</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>2</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95-amp-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">算法 &amp; 数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">数据结构的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E3%80%81%E7%BA%A2%E9%BB%91%E6%A0%91%E3%80%81%E8%B7%B3%E8%A1%A8"><span class="toc-text">哈希、红黑树、跳表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">合适的数据结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89%E8%B7%B3%E8%A1%A8"><span class="toc-text">为什么还要有跳表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%A1%A8%E5%AE%9E%E7%8E%B0"><span class="toc-text">跳表实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0"><span class="toc-text">构造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%85%83%E7%B4%A0"><span class="toc-text">搜索元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E5%85%83%E7%B4%A0"><span class="toc-text">新增元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-text">删除元素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">适用场景</span></a></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/algs">
+        <div class="categories-list-item">
+          algs
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\java" title="java"><div class="tags-list-item">java</div></a>
+    
+    <a href="\tags\algs" title="algs"><div class="tags-list-item">algs</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95-amp-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">算法 &amp; 数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">数据结构的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E3%80%81%E7%BA%A2%E9%BB%91%E6%A0%91%E3%80%81%E8%B7%B3%E8%A1%A8"><span class="toc-text">哈希、红黑树、跳表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">合适的数据结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E6%9C%89%E8%B7%B3%E8%A1%A8"><span class="toc-text">为什么还要有跳表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-text">特点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%A1%A8%E5%AE%9E%E7%8E%B0"><span class="toc-text">跳表实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0"><span class="toc-text">构造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%85%83%E7%B4%A0"><span class="toc-text">搜索元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E5%85%83%E7%B4%A0"><span class="toc-text">新增元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-text">删除元素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">适用场景</span></a></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-07-04</div>
+        <a href="/2020/07/04/skipList/"><div class="recent-posts-item-content">跳表</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2021
+        </span>
+        &nbsp;
+        <a href="/" class="footer-link">懒蜗牛笔记 </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton"  aria-label="回到顶部">
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton" aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget" aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a role="button" id="searchbutton" class="basebutton searchwidget" aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('aria-label', 'illustration');
+      wrapper.style.cssText = 'width: 100%; display: flex; justify-content: center;';
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt;
+      wrapper.dataset.nolink = true;
+      img[i].before(wrapper);
+      wrapper.append(img[i]);
+      var divWrap = document.createElement('div');
+      divWrap.classList.add('gallery');
+      wrapper.before(divWrap);
+      divWrap.append(wrapper);
+    }
+    baguetteBox.run('.gallery');
+  }
+</script>
+<script>loadScript("/js/lib/lightbox/baguetteBox.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>
