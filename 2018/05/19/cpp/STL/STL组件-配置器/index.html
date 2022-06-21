@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="懒懒懒蜗牛🐌">
+  <link 
+    rel="icon" 
+    href="/img/little-prince.png">
+  <title>STL-配置器</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="STL-配置器">
+    
+    
+      <meta 
+        property="og:url" 
+        content="https://lazy-snail.github.io/2018/05/19/cpp/STL/STL%E7%BB%84%E4%BB%B6-%E9%85%8D%E7%BD%AE%E5%99%A8/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="/img/little-prince.png">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-05-19">
+      <meta 
+        property="og:article:modified_time" 
+        content="2018-06-21">
+      <meta 
+        property="og:article:author" 
+        content="Neil">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="cpp">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+      
+      
+      
+      
+        
+        
+        
+        <script>
+          function prismThemeChange() {
+            if(document.getElementById('theme-color').dataset.mode === 'dark') {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism-tomorrow.min.css', '[data-prism]', 'prism-tomorrow');
+              } else {
+                loadCSS('/js/lib/prism/prism-tomorrow.min.css', 'prism', 'prism-tomorrow');
+              }
+            } else {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism.min.css', '[data-prism]', 'prism');
+              } else {
+                loadCSS('/js/lib/prism/prism.min.css', 'prism', 'prism');
+              }
+            }
+          }
+          prismThemeChange()
+        </script>
+      
+      
+        
+        <link rel="stylesheet" href="/js/lib/prism/prism-line-numbers.min.css">
+      
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+        prismThemeChange();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+    
+    <link rel="prefetch" href="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js" as="script">
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="/img/little-prince.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">懒蜗牛</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          Home
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          Archive
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      STL-配置器
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-05-19T14:52:28.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-05-19</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/cpp/" 
+          class="post-meta-link">
+          cpp
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>851 words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/cpp/" 
+            class="post-meta-link">
+            cpp
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>[toc]</p>
+<h2 id="空间配置器"><a href="#空间配置器" class="headerlink" title="空间配置器"></a>空间配置器</h2><p>配置器（allocators），负责空间配置与管理，从实现的角度看，是一个实现了动态空间配置、空间管理、空间释放的 class template。<br>从 STL 应用角度看，它总是隐藏在一切组件（指容器）的背后；从 STL 实现角度看，整个 STL 操作对象都存放在容器里，而容器的空间配置都是由空间配置器完成的。<br>allocator 被称为空间配置器而非内存配置器，是因为空间也有可能是磁盘或其他辅助存储介质，即，可以实现直接向磁盘读取空间的 allocator。</p>
+<p>C++ 内存配置基本操作是 ::operator new()，内存释放基本操作是 ::operator delete()。这两个全局函数相当于 C 的 malloc()和 free()函数。</p>
+<h2 id="SGI-双层配置器"><a href="#SGI-双层配置器" class="headerlink" title="SGI 双层配置器"></a>SGI 双层配置器</h2><p>SGI 的空间配置与释放设计哲学：</p>
+<ul>
+<li>向 system heap 请求空间；</li>
+<li>考虑多线程（multi-threads）状态；</li>
+<li>考虑内存不足时的应对措施；</li>
+<li>考虑过多“小型区块”可能造成的内存碎片（fragment）问题。</li>
+</ul>
+<p>考虑到小型区块可能造成的内存破碎问题，SGI 设计了双层级配置器，第一级配置器直接使用 malloc()和free()，第二级配置器则视情况采用不同的策略：当配置区块超过 128 bytes 时，视之为“足够大”，调用第一级配置器；当配置区块小于 128 bytes 时，视之为“过小”，为了降低额外负担（overhead），采用复杂的 memory pool 整理方式，不再借助第一级配置器。</p>
+<h3 id="第一级配置器-malloc-alloc-template"><a href="#第一级配置器-malloc-alloc-template" class="headerlink" title="第一级配置器 __malloc_alloc_template"></a>第一级配置器 __malloc_alloc_template</h3><p>以 malloc()、free()、realloc()等 C 函数执行实际的内存配置、释放、重配置等操作，并实现类似 C++ new-handler 机制（即，它不能直接使用 C++ new-handler 机制，因为它并非使用 ::operator new 来配置内存）。</p>
+<p><strong>C++ new Handler</strong><br>可以要求系统在内存配置请求无法被满足时，调用一个指定的函数，即，一旦 ::operator new()无法完成任务，在抛出 std::bad_alloc 异常之前，先调用指定的处理函数，该处理函数通常被称为 new-handler</p>
+<p>SGI 第一级配置器的空间配置函数 allocate()和 realloc()都是在调用 malloc()和realloc()不成功后，改调用 oom_malloc()和 oom_realloc()。后两者通过内循环不断调用“内存不足处理例程”，期望在某次调用之后，获得足够的内存而完成人物。但如果该例程没有被用户设置，oom_malloc()和 oom_realloc()只能调用 __THROW_BAD_ALLOC，抛出 bad_alloc 异常，或利用 exit(1) 终止程序。空间释放函数 deallocate()直接调用 free()执行。</p>
+<p><strong>设计“内存不足处理例程”是用户（开发者）的责任。</strong></p>
+<h3 id="第二级配置器-default-alloc-template"><a href="#第二级配置器-default-alloc-template" class="headerlink" title="第二级配置器 __default_alloc_template"></a>第二级配置器 __default_alloc_template</h3><p>通过一些机制避免太多小型区域造成的内存碎片。具体做法是，当配置区块超过 128 bytes 时，视之为“足够大”，移交并调用第一级配置器；当配置区块小于 128 bytes 时，采用内存池管理，不再借助第一级配置器。</p>
+<h4 id="第二级配置器的空间配置与释放"><a href="#第二级配置器的空间配置与释放" class="headerlink" title="第二级配置器的空间配置与释放"></a>第二级配置器的空间配置与释放</h4><p>通过 __default_alloc_template 的标准接口函数 allocate()和 deallocate()进行空间配置和释放。显然，二者会判断空间大小（是否大于 128 bytes），从而决定是否调用第一级配置器的配置&#x2F;释放函数。</p>
+<h4 id="内存池"><a href="#内存池" class="headerlink" title="内存池"></a>内存池</h4><p>tbd</p>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            Neil
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="https://lazy-snail.github.io/2018/05/19/cpp/STL/STL%E7%BB%84%E4%BB%B6-%E9%85%8D%E7%BD%AE%E5%99%A8/">
+            https://lazy-snail.github.io/2018/05/19/cpp/STL/STL%E7%BB%84%E4%BB%B6-%E9%85%8D%E7%BD%AE%E5%99%A8/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2018/05/22/cpp/%E7%BC%96%E8%AF%91%20%E9%93%BE%E6%8E%A5/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">编译 链接 </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/05/19/cpp/STL/STL%E7%BB%84%E4%BB%B6-%E9%80%82%E9%85%8D%E5%99%A8/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">STL-适配器 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">空间配置器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SGI-%E5%8F%8C%E5%B1%82%E9%85%8D%E7%BD%AE%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">SGI 双层配置器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8-malloc-alloc-template"><span class="toc-number">2.1.</span> <span class="toc-text">第一级配置器 __malloc_alloc_template</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8-default-alloc-template"><span class="toc-number">2.2.</span> <span class="toc-text">第二级配置器 __default_alloc_template</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8%E7%9A%84%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%87%8A%E6%94%BE"><span class="toc-number">2.2.1.</span> <span class="toc-text">第二级配置器的空间配置与释放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B1%A0"><span class="toc-number">2.2.2.</span> <span class="toc-text">内存池</span></a></li></ol></li></ol></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="/img/little-prince.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">Neil</p>
+<p class="author-description">there's a will there's a way</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>172</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>13</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>30</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">空间配置器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SGI-%E5%8F%8C%E5%B1%82%E9%85%8D%E7%BD%AE%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">SGI 双层配置器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8-malloc-alloc-template"><span class="toc-number">2.1.</span> <span class="toc-text">第一级配置器 __malloc_alloc_template</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8-default-alloc-template"><span class="toc-number">2.2.</span> <span class="toc-text">第二级配置器 __default_alloc_template</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8%E7%9A%84%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%87%8A%E6%94%BE"><span class="toc-number">2.2.1.</span> <span class="toc-text">第二级配置器的空间配置与释放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B1%A0"><span class="toc-number">2.2.2.</span> <span class="toc-text">内存池</span></a></li></ol></li></ol></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/CN/">
+        <div class="categories-list-item">
+          CN
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Algs/">
+        <div class="categories-list-item">
+          Algs
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CS/">
+        <div class="categories-list-item">
+          CS
+          <span class="categories-list-item-badge">9</span>
+        </div>
+      </a>
+    
+      <a href="/categories/DB/">
+        <div class="categories-list-item">
+          DB
+          <span class="categories-list-item-badge">15</span>
+        </div>
+      </a>
+    
+      <a href="/categories/OS/">
+        <div class="categories-list-item">
+          OS
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/backend/">
+        <div class="categories-list-item">
+          backend
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">59</span>
+        </div>
+      </a>
+    
+      <a href="/categories/middleware/">
+        <div class="categories-list-item">
+          middleware
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/tools/">
+        <div class="categories-list-item">
+          tools
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/algs/">
+        <div class="categories-list-item">
+          algs
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Daily/">
+        <div class="categories-list-item">
+          Daily
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cpp/">
+        <div class="categories-list-item">
+          cpp
+          <span class="categories-list-item-badge">20</span>
+        </div>
+      </a>
+    
+      <a href="/categories/py/">
+        <div class="categories-list-item">
+          py
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/java/" 
+        title="java">
+        <div class="tags-list-item">java</div>
+      </a>
+    
+      <a 
+        href="/tags/cpp/" 
+        title="cpp">
+        <div class="tags-list-item">cpp</div>
+      </a>
+    
+      <a 
+        href="/tags/OS/" 
+        title="OS">
+        <div class="tags-list-item">OS</div>
+      </a>
+    
+      <a 
+        href="/tags/DB/" 
+        title="DB">
+        <div class="tags-list-item">DB</div>
+      </a>
+    
+      <a 
+        href="/tags/MySQL/" 
+        title="MySQL">
+        <div class="tags-list-item">MySQL</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%AE%B9%E5%99%A8/" 
+        title="容器">
+        <div class="tags-list-item">容器</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%B9%B6%E5%8F%91/" 
+        title="并发">
+        <div class="tags-list-item">并发</div>
+      </a>
+    
+      <a 
+        href="/tags/JVM/" 
+        title="JVM">
+        <div class="tags-list-item">JVM</div>
+      </a>
+    
+      <a 
+        href="/tags/Algs/" 
+        title="Algs">
+        <div class="tags-list-item">Algs</div>
+      </a>
+    
+      <a 
+        href="/tags/CN/" 
+        title="CN">
+        <div class="tags-list-item">CN</div>
+      </a>
+    
+      <a 
+        href="/tags/CS/" 
+        title="CS">
+        <div class="tags-list-item">CS</div>
+      </a>
+    
+      <a 
+        href="/tags/Q-A/" 
+        title="Q&A">
+        <div class="tags-list-item">Q&amp;A</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%96%B0%E7%89%B9%E6%80%A7/" 
+        title="新特性">
+        <div class="tags-list-item">新特性</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BA%BF%E7%A8%8B/" 
+        title="线程">
+        <div class="tags-list-item">线程</div>
+      </a>
+    
+      <a 
+        href="/tags/Sort/" 
+        title="Sort">
+        <div class="tags-list-item">Sort</div>
+      </a>
+    
+      <a 
+        href="/tags/Linux/" 
+        title="Linux">
+        <div class="tags-list-item">Linux</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">空间配置器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SGI-%E5%8F%8C%E5%B1%82%E9%85%8D%E7%BD%AE%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">SGI 双层配置器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8-malloc-alloc-template"><span class="toc-number">2.1.</span> <span class="toc-text">第一级配置器 __malloc_alloc_template</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8-default-alloc-template"><span class="toc-number">2.2.</span> <span class="toc-text">第二级配置器 __default_alloc_template</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%BA%A7%E9%85%8D%E7%BD%AE%E5%99%A8%E7%9A%84%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%87%8A%E6%94%BE"><span class="toc-number">2.2.1.</span> <span class="toc-text">第二级配置器的空间配置与释放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B1%A0"><span class="toc-number">2.2.2.</span> <span class="toc-text">内存池</span></a></li></ol></li></ol></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-04-18</div>
+        <a href="/2021/04/18/ING/Integer/"><div class="recent-posts-item-content">Integer</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-04-16</div>
+        <a href="/2021/04/16/ING/RTFSC/"><div class="recent-posts-item-content">jdk源码阅读</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-04-09</div>
+        <a href="/2021/04/09/ING/tools/"><div class="recent-posts-item-content">tools</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-09-29</div>
+        <a href="/2020/09/29/ING/N/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2017 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          懒蜗牛
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        
+        
+      </div>
+      
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+      
+
+  
+  
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    
+<script src="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js"></script>
+
+  
+ 
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+    
+      <script> 
+        loadScript('/js/lib/busuanzi.min.js') 
+      </script>
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+      <script>
+        setTimeout(() => {localSearch("search.json")}, 0)
+      </script>
+    
+  </body>
+</html>

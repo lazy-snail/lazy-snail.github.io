@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="懒懒懒蜗牛🐌">
+  <link 
+    rel="icon" 
+    href="/img/little-prince.png">
+  <title>性能监控和故障处理工具</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="性能监控和故障处理工具">
+    
+    
+      <meta 
+        property="og:url" 
+        content="https://lazy-snail.github.io/2018/04/25/java/JVM/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8C%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="/img/little-prince.png">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-04-25">
+      <meta 
+        property="og:article:modified_time" 
+        content="2018-07-22">
+      <meta 
+        property="og:article:author" 
+        content="Neil">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="java">
+        
+          <meta 
+            property="og:article:tag" 
+            content="JVM">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+      
+      
+      
+      
+        
+        
+        
+        <script>
+          function prismThemeChange() {
+            if(document.getElementById('theme-color').dataset.mode === 'dark') {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism-tomorrow.min.css', '[data-prism]', 'prism-tomorrow');
+              } else {
+                loadCSS('/js/lib/prism/prism-tomorrow.min.css', 'prism', 'prism-tomorrow');
+              }
+            } else {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism.min.css', '[data-prism]', 'prism');
+              } else {
+                loadCSS('/js/lib/prism/prism.min.css', 'prism', 'prism');
+              }
+            }
+          }
+          prismThemeChange()
+        </script>
+      
+      
+        
+        <link rel="stylesheet" href="/js/lib/prism/prism-line-numbers.min.css">
+      
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+        prismThemeChange();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+    
+    <link rel="prefetch" href="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js" as="script">
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="/img/little-prince.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">懒蜗牛</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          Home
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          Archive
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      性能监控和故障处理工具
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-04-25T14:10:24.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-04-25</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/java/" 
+          class="post-meta-link">
+          java
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>2.8k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/java/" 
+            class="post-meta-link">
+            java
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/JVM/" 
+            class="post-meta-link">
+            JVM
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>排查定位问题的时候，一般会用到的数据有：运行日志、异常堆栈、GC 日志、线程快照（threaddump&#x2F;javacore 文件）、堆转储快照（heapdump&#x2F;hprof 文件）等。<br>$JAVA_HOME$&#x2F;bin 目录下有很多功能强大的性能监控、故障定位排查工具，它们大多是 $JAVA_HOME$&#x2F;lib&#x2F;tools.jar 类库的包装，功能代码是在 tools 类库中实现的，因而体积都很小。使用 java 代码实现这些工具的意义在于：当 app 部署到生产环境后，无论是直接接触物理服务器还是远程登陆到服务器上都可能受到限制，借助 tools.jar 类库里面的接口，可以直接在 app 中实现功能强大的监控分析功能。<br>这里是一些常用自带&#x2F;第三方性能监控、故障定位处理工具。</p>
+<h1 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h1><p>JVM Process Status Tool，显示指定系统内所有 HotSpot 虚拟机进程。<br>功能类似于 Unix&#x2F;Linux 中的 ps 命令：列出正在运行的虚拟机进程，并显示虚拟机执行主类（Main Class，main() 函数所在的类）名称以及这些进程的本地虚拟机唯一 ID（Local Virtual Machine Identifier， LVMID）。</p>
+<h2 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h2><p>jps [options] [hostid]</p>
+<h2 id="主要选项"><a href="#主要选项" class="headerlink" title="主要选项"></a>主要选项</h2><ul>
+<li>-l：显示进程 ID 和主类全名，如果执行的是 jar 包，则输出 jar 路径；</li>
+<li>-m：输出虚拟机进程启动时传递给主类 main() 函数的参数；</li>
+<li>-v：输出虚拟机进程启动时 JVM 参数；</li>
+<li>-q：只输出 LVMID，省略主类的名称。</li>
+</ul>
+<h1 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a>jinfo</h1><p>Configuration Info for Java，显示虚拟机配置信息。实时查看和调整虚拟机各项参数。</p>
+<h2 id="命令格式-1"><a href="#命令格式-1" class="headerlink" title="命令格式"></a>命令格式</h2><p>jinfo [option] pid</p>
+<h1 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a>jstat</h1><p>JVM statistics Monitoring Tool，监视收集虚拟机各类运行状态数据。<br>可以显示本地或远程虚拟机的类装载、内存、垃圾收集、JIT 编译等运行数据，在没有 GUI 而只提供纯文本控制台环境的服务器上，它是运行期定位虚拟机性能问题的首选工具。</p>
+<h2 id="命令格式-2"><a href="#命令格式-2" class="headerlink" title="命令格式"></a>命令格式</h2><p>jstat [option vmid [interval [s | ms] [count]]]<br>其中，<br>interval：查询间隔（默认毫秒）；count：查询次数。省略这两个参数即只查询一次。<br>如果是本地虚拟机进程，VMID 与 LVMID 一致，如果是远程虚拟机进程，VMID 格式为：[protocol: ] [ &#x2F;&#x2F; ] lvmid [@hostname [: port] &#x2F; servername]<br>示例：jstat -gc 7717 500 10：每 500 ms 查询一次进程 7717 垃圾收集情况，共查询 10 次。</p>
+<h2 id="主要选项-1"><a href="#主要选项-1" class="headerlink" title="主要选项"></a>主要选项</h2><p>选项比较多，主要分为 3 类：类装载、垃圾收集、运行期编译状况。常用的有</p>
+<ul>
+<li>-class：监视类装载数量、卸载数量、总空间以及类装载所耗费的时间</li>
+<li>-gc：监视 java 堆状况，包括 Eden 区、两个 Survivor 区、老年代、永久代等的容量、已用空间、GC 时间合计等信息<br>结果列表大致如下：<img src="/2018/04/25/java/JVM/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8C%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/04/25/java/JVM/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8C%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/jstat%E7%BB%93%E6%9E%9C.PNG" class title="jstat -gc 结果" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/04/25/java/JVM/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8C%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/04/25/java/JVM/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8C%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/jstat%E7%BB%93%E6%9E%9C.PNG" class="lozad post-image"></li>
+<li>-gccapacity：监视内容基本与 -gc 相同，但输出主要关注 java 堆各个区域使用到的最大、最小空间</li>
+<li>-gcutil：监视内容基本与 -gc 相同，但输出主要关注已使用空间占总空间的百分比</li>
+<li>-gcnew：监视新生代 GC 情况</li>
+<li>-gcnewcapacity：监视内容基本与 -gcnew 相同，但输出主要关注使用到的最大、最小空间</li>
+<li>-gcold：监视老年代 GC 情况</li>
+<li>-gcoldcapacity：监视内容基本与 -gcold 相同，但输出主要关注使用到的最大、最小空间</li>
+<li>-gcmetacapacity：监视 metaspace 情况</li>
+<li>-compiler：输出 JIT 编译器编译过的方法、耗时情况等信息</li>
+<li>-printcompilation：输出已经被 jIT 编译的方法</li>
+</ul>
+<p><em>结果列信息可参考 man jstat</em> 大致如下：</p>
+<ul>
+<li>S0C：年轻代中第一个survivor（幸存区）的容量 (字节) </li>
+<li>S1C：年轻代中第二个survivor（幸存区）的容量 (字节) </li>
+<li>S0U：年轻代中第一个survivor（幸存区）目前已使用空间 (字节) </li>
+<li>S1U：年轻代中第二个survivor（幸存区）目前已使用空间 (字节) </li>
+<li>EC：年轻代中Eden（伊甸园）的容量 (字节) </li>
+<li>EU：年轻代中Eden（伊甸园）目前已使用空间 (字节) </li>
+<li>OC：Old代的容量 (字节) </li>
+<li>OU：Old代目前已使用空间 (字节) </li>
+<li>PC：Perm(持久代)的容量 (字节) </li>
+<li>PU：Perm(持久代)目前已使用空间 (字节) </li>
+<li>YGC：从应用程序启动到采样时年轻代中gc次数 </li>
+<li>YGCT：从应用程序启动到采样时年轻代中gc所用时间(s) </li>
+<li>FGC：从应用程序启动到采样时old代(全gc)gc次数 </li>
+<li>FGCT：从应用程序启动到采样时old代(全gc)gc所用时间(s) </li>
+<li>GCT：从应用程序启动到采样时gc用的总时间(s) </li>
+<li>NGCMN：年轻代(young)中初始化(最小)的大小 (字节) </li>
+<li>NGCMX：年轻代(young)的最大容量 (字节) </li>
+<li>NGC：年轻代(young)中当前的容量 (字节) </li>
+<li>OGCMN：old代中初始化(最小)的大小 (字节) </li>
+<li>OGCMX：old代的最大容量 (字节) </li>
+<li>OGC：old代当前新生成的容量 (字节) </li>
+<li>PGCMN：perm代中初始化(最小)的大小 (字节) </li>
+<li>PGCMX：perm代的最大容量 (字节) </li>
+<li>PGC：perm代当前新生成的容量 (字节) </li>
+<li>S0：年轻代中第一个survivor（幸存区）已使用的占当前容量百分比 </li>
+<li>S1：年轻代中第二个survivor（幸存区）已使用的占当前容量百分比 </li>
+<li>E：年轻代中Eden（伊甸园）已使用的占当前容量百分比 </li>
+<li>O：old代已使用的占当前容量百分比 </li>
+<li>P：perm代已使用的占当前容量百分比 </li>
+<li>S0CMX：年轻代中第一个survivor（幸存区）的最大容量 (字节) </li>
+<li>S1CMX ：年轻代中第二个survivor（幸存区）的最大容量 (字节) </li>
+<li>ECMX：年轻代中Eden（伊甸园）的最大容量 (字节) </li>
+<li>DSS：当前需要survivor（幸存区）的容量 (字节)（Eden区已满） </li>
+<li>TT： 持有次数限制 </li>
+<li>MTT ： 最大持有次数限制</li>
+</ul>
+<h1 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h1><p>Memory Map for Java，生成虚拟机的内存转储快照（heapdump&#x2F;dump 文件）。<br>也可以通过 -XX: +HeapDumpOnOutOfMemoryError 参数让虚拟机在 OOM 异常出现之后自动生成 dump 文件；或在 Linux 下 通过 kill -3 命令发送进程退出信号，也将生成 dump 文件。<br>jmap 还可以查询 finalize 执行队列、java 堆和永久代的详细信息，如空间使用率、当前使用的收集器种类等。</p>
+<h2 id="命令格式-3"><a href="#命令格式-3" class="headerlink" title="命令格式"></a>命令格式</h2><p>jmap [option] vmid</p>
+<h2 id="主要选项-2"><a href="#主要选项-2" class="headerlink" title="主要选项"></a>主要选项</h2><ul>
+<li>-dump：生成 java 堆转储快照，格式为：-dump: [live, ] format&#x3D;b, file&#x3D;<filename>   其中 live 子参数说明是否只 dump 出存活的对象。示例：<br>jmap -dump:live,format&#x3D;b,file&#x3D;heap.bin <pid></pid></filename></li>
+<li>-F：对 -dump 选项没有响应时，可用该选项强制生成 dump 快照。（仅在 Linux&#x2F;Solaris 下有效）</li>
+<li>-heap：显示 java 堆详细信息，如使用哪种回收器、参数配置、分代状况等。（仅在 Linux&#x2F;Solaris 下有效）</li>
+<li>-finalizerinfo：显示在 F-Queue 中等待 Finalizer 线程执行 finalie() 方法的对象。（仅在 Linux&#x2F;Solaris 下有效）</li>
+<li>-histo：显示堆中对象统计信息，包括类、实例数量、合计容量等 <em>（histogram）</em></li>
+</ul>
+<h1 id="jstack"><a href="#jstack" class="headerlink" title="jstack"></a>jstack</h1><p>Stack Trace for Java，java 堆栈跟踪工具。<br>用于生成虚拟机当前时刻的线程快照（一般为 threaddump 或 javacore 文件）。<strong>线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合</strong>。生成快照的主要目的是定位线程出现长时间停顿的原因，如线程间锁等待（死锁、活锁）、死循环、请求外部资源（如数据库连接、网络资源、设备资源等）导致的长时间等待等，都是导致线程长时间停顿的常见原因。线程出现停顿的时候通过 jstack 来查看各个线程的调用堆栈，可以看出没有响应的线程到底在后台做些什么事情，或者在等待什么资源。</p>
+<h2 id="命令格式-4"><a href="#命令格式-4" class="headerlink" title="命令格式"></a>命令格式</h2><p>jstack [option] vmid</p>
+<h2 id="主要选项-3"><a href="#主要选项-3" class="headerlink" title="主要选项"></a>主要选项</h2><ul>
+<li>-l：除堆栈外，显示关于锁的附加信息</li>
+<li>-m：如果调用到本地方法的话，可以显示 C&#x2F;C++ 的堆栈</li>
+<li>-F：当正常输出的请求不被响应时，强制输出线程堆栈</li>
+</ul>
+<h1 id="javap"><a href="#javap" class="headerlink" title="javap"></a>javap</h1><p>JDK 自带的反汇编器</p>
+<h2 id="命令格式-5"><a href="#命令格式-5" class="headerlink" title="命令格式"></a>命令格式</h2><p>javap [option] xxx.class</p>
+<h2 id="主要选项-4"><a href="#主要选项-4" class="headerlink" title="主要选项"></a>主要选项</h2><ul>
+<li>-c：输出类中各方法的未解析的代码，即构成java字节码的指令</li>
+<li>-classpath <pathlist>：指定javap用来查找类的路径。目录用：分隔</pathlist></li>
+<li>-extdirs <dirs>：覆盖搜索安装方式扩展的位置，扩展的缺省位置为jre&#x2F;lib&#x2F;ext</dirs></li>
+<li>-J<flag>：直接将flag传给运行时系统</flag></li>
+<li>-l： 输出行及局部变量表</li>
+<li>-public：只显示public类及成员</li>
+<li>-protected：只显示protected和public类及成员。</li>
+<li>-private：显示所有的类和成员</li>
+<li>-package：只显示包、protected和public类及成员，这是缺省设置</li>
+<li>-s：输出内部类型签名</li>
+<li>-bootclasspath <pathlist>：指定加载自举类所用的路径，如jre&#x2F;lib&#x2F;rt.jar或i18n.jar</pathlist></li>
+<li>-verbose：打印堆栈大小、各方法的locals及args参数，以及class文件的编译版本</li>
+</ul>
+<h1 id="jhat"><a href="#jhat" class="headerlink" title="jhat"></a>jhat</h1><p>分析 heapdump 文件。<br>建立一个 http&#x2F;html 服务器，让用户可以在浏览器上查看分析结果。配合 jmap 使用。<br>分析过程耗时而且消耗硬件资源，一般而言，不会在服务器上直接分析 dump 文件，而是复制到其他机器上进行分析；jhat 的分析功能比较简陋。在 JDK 10 中已弃用，建议使用功能更强大的 VisualVM、Eclipse Memory Analyzer、IBM HeapAnalyzer 等工具。</p>
+<h1 id="jconsole"><a href="#jconsole" class="headerlink" title="jconsole"></a>jconsole</h1><p>Java Monitoring &amp; Management Console，java 监视与管理控制台。<br>基于 JMX 的可视化监视、管理工具。管理部分的功能是针对 JMX MBean 进行管理， MBean 可以使用代码、中间服务器的管理控制台或者所有符合 JMX 规范的软件进行访问。</p>
+<p>主界面包括 6 个页签：概述、内存、线程、类、VM摘要、MBean</p>
+<ul>
+<li>概述<br>整个虚拟机主要数据的概览，包括：堆内存使用情况、线程、类、CPU 占用率，是后续 4 个页签的信息汇总；</li>
+<li>内存<br>相当于可视化的 jstat，用于监视受收集器管理的虚拟机内存（java 堆和永久代）的变化趋势。</li>
+<li>线程<br>相当于可视化的 jstack，遇到线程停顿时可以使用这个页签进行监控分析。</li>
+</ul>
+<h1 id="VisualVM"><a href="#VisualVM" class="headerlink" title="VisualVM"></a>VisualVM</h1><p>All-in-One Java Troubleshooting Tool，可视化多合一故障处理工具。<br>提供丰富的功能：运行监视、故障处理、性能分析（Profiling），而且，不需要被监视的程序基于特殊的 Agent 运行，因此对应用程序的实际性能的影响很小，使得它可以直接应用在生产环境中。<br>它的“All-in-One”体现在：</p>
+<ul>
+<li>显示虚拟机进程以及进程的配置、环境信息（jps、jinfo）；</li>
+<li>监视应用程序的 CPU、GC、堆、方法区、线程等的信息（jstat、jstack）；</li>
+<li>dump 和分析堆转储快照（jmap、jhat）；</li>
+<li>方法级的程序运行性能分析，找出被调用最多、运行时间最长的方法；</li>
+<li>离线程序快照：收集程序的运行时配置、线程 dump、内存 dump 等信息，建立一个快照，可以将快照发送给开发者进行处理；</li>
+<li>丰富的插件资源；</li>
+<li>etc.</li>
+</ul>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            Neil
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="https://lazy-snail.github.io/2018/04/25/java/JVM/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8C%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/">
+            https://lazy-snail.github.io/2018/04/25/java/JVM/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E5%92%8C%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2018/04/26/java/into/java-%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">Java-自动装箱与拆箱 </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/04/25/java/JVM/GC%E4%BC%98%E5%8C%96/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">GC优化 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#jps"><span class="toc-number">1.</span> <span class="toc-text">jps</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9"><span class="toc-number">1.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jinfo"><span class="toc-number">2.</span> <span class="toc-text">jinfo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-1"><span class="toc-number">2.1.</span> <span class="toc-text">命令格式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jstat"><span class="toc-number">3.</span> <span class="toc-text">jstat</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-2"><span class="toc-number">3.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-1"><span class="toc-number">3.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jmap"><span class="toc-number">4.</span> <span class="toc-text">jmap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-3"><span class="toc-number">4.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-2"><span class="toc-number">4.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jstack"><span class="toc-number">5.</span> <span class="toc-text">jstack</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-4"><span class="toc-number">5.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-3"><span class="toc-number">5.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#javap"><span class="toc-number">6.</span> <span class="toc-text">javap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-5"><span class="toc-number">6.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-4"><span class="toc-number">6.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jhat"><span class="toc-number">7.</span> <span class="toc-text">jhat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jconsole"><span class="toc-number">8.</span> <span class="toc-text">jconsole</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VisualVM"><span class="toc-number">9.</span> <span class="toc-text">VisualVM</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="/img/little-prince.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">Neil</p>
+<p class="author-description">there's a will there's a way</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>172</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>13</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>30</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#jps"><span class="toc-number">1.</span> <span class="toc-text">jps</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9"><span class="toc-number">1.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jinfo"><span class="toc-number">2.</span> <span class="toc-text">jinfo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-1"><span class="toc-number">2.1.</span> <span class="toc-text">命令格式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jstat"><span class="toc-number">3.</span> <span class="toc-text">jstat</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-2"><span class="toc-number">3.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-1"><span class="toc-number">3.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jmap"><span class="toc-number">4.</span> <span class="toc-text">jmap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-3"><span class="toc-number">4.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-2"><span class="toc-number">4.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jstack"><span class="toc-number">5.</span> <span class="toc-text">jstack</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-4"><span class="toc-number">5.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-3"><span class="toc-number">5.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#javap"><span class="toc-number">6.</span> <span class="toc-text">javap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-5"><span class="toc-number">6.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-4"><span class="toc-number">6.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jhat"><span class="toc-number">7.</span> <span class="toc-text">jhat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jconsole"><span class="toc-number">8.</span> <span class="toc-text">jconsole</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VisualVM"><span class="toc-number">9.</span> <span class="toc-text">VisualVM</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/CN/">
+        <div class="categories-list-item">
+          CN
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Algs/">
+        <div class="categories-list-item">
+          Algs
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CS/">
+        <div class="categories-list-item">
+          CS
+          <span class="categories-list-item-badge">9</span>
+        </div>
+      </a>
+    
+      <a href="/categories/DB/">
+        <div class="categories-list-item">
+          DB
+          <span class="categories-list-item-badge">15</span>
+        </div>
+      </a>
+    
+      <a href="/categories/OS/">
+        <div class="categories-list-item">
+          OS
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/backend/">
+        <div class="categories-list-item">
+          backend
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">59</span>
+        </div>
+      </a>
+    
+      <a href="/categories/middleware/">
+        <div class="categories-list-item">
+          middleware
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/tools/">
+        <div class="categories-list-item">
+          tools
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/algs/">
+        <div class="categories-list-item">
+          algs
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Daily/">
+        <div class="categories-list-item">
+          Daily
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cpp/">
+        <div class="categories-list-item">
+          cpp
+          <span class="categories-list-item-badge">20</span>
+        </div>
+      </a>
+    
+      <a href="/categories/py/">
+        <div class="categories-list-item">
+          py
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/java/" 
+        title="java">
+        <div class="tags-list-item">java</div>
+      </a>
+    
+      <a 
+        href="/tags/cpp/" 
+        title="cpp">
+        <div class="tags-list-item">cpp</div>
+      </a>
+    
+      <a 
+        href="/tags/OS/" 
+        title="OS">
+        <div class="tags-list-item">OS</div>
+      </a>
+    
+      <a 
+        href="/tags/DB/" 
+        title="DB">
+        <div class="tags-list-item">DB</div>
+      </a>
+    
+      <a 
+        href="/tags/MySQL/" 
+        title="MySQL">
+        <div class="tags-list-item">MySQL</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%AE%B9%E5%99%A8/" 
+        title="容器">
+        <div class="tags-list-item">容器</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%B9%B6%E5%8F%91/" 
+        title="并发">
+        <div class="tags-list-item">并发</div>
+      </a>
+    
+      <a 
+        href="/tags/JVM/" 
+        title="JVM">
+        <div class="tags-list-item">JVM</div>
+      </a>
+    
+      <a 
+        href="/tags/Algs/" 
+        title="Algs">
+        <div class="tags-list-item">Algs</div>
+      </a>
+    
+      <a 
+        href="/tags/CN/" 
+        title="CN">
+        <div class="tags-list-item">CN</div>
+      </a>
+    
+      <a 
+        href="/tags/CS/" 
+        title="CS">
+        <div class="tags-list-item">CS</div>
+      </a>
+    
+      <a 
+        href="/tags/Q-A/" 
+        title="Q&A">
+        <div class="tags-list-item">Q&amp;A</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%96%B0%E7%89%B9%E6%80%A7/" 
+        title="新特性">
+        <div class="tags-list-item">新特性</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BA%BF%E7%A8%8B/" 
+        title="线程">
+        <div class="tags-list-item">线程</div>
+      </a>
+    
+      <a 
+        href="/tags/Sort/" 
+        title="Sort">
+        <div class="tags-list-item">Sort</div>
+      </a>
+    
+      <a 
+        href="/tags/Linux/" 
+        title="Linux">
+        <div class="tags-list-item">Linux</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#jps"><span class="toc-number">1.</span> <span class="toc-text">jps</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9"><span class="toc-number">1.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jinfo"><span class="toc-number">2.</span> <span class="toc-text">jinfo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-1"><span class="toc-number">2.1.</span> <span class="toc-text">命令格式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jstat"><span class="toc-number">3.</span> <span class="toc-text">jstat</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-2"><span class="toc-number">3.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-1"><span class="toc-number">3.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jmap"><span class="toc-number">4.</span> <span class="toc-text">jmap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-3"><span class="toc-number">4.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-2"><span class="toc-number">4.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jstack"><span class="toc-number">5.</span> <span class="toc-text">jstack</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-4"><span class="toc-number">5.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-3"><span class="toc-number">5.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#javap"><span class="toc-number">6.</span> <span class="toc-text">javap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F-5"><span class="toc-number">6.1.</span> <span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%80%89%E9%A1%B9-4"><span class="toc-number">6.2.</span> <span class="toc-text">主要选项</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jhat"><span class="toc-number">7.</span> <span class="toc-text">jhat</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#jconsole"><span class="toc-number">8.</span> <span class="toc-text">jconsole</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VisualVM"><span class="toc-number">9.</span> <span class="toc-text">VisualVM</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-04-18</div>
+        <a href="/2021/04/18/ING/Integer/"><div class="recent-posts-item-content">Integer</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-04-16</div>
+        <a href="/2021/04/16/ING/RTFSC/"><div class="recent-posts-item-content">jdk源码阅读</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-04-09</div>
+        <a href="/2021/04/09/ING/tools/"><div class="recent-posts-item-content">tools</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-09-29</div>
+        <a href="/2020/09/29/ING/N/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2017 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          懒蜗牛
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        
+        
+      </div>
+      
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+      
+
+  
+  
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    
+<script src="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js"></script>
+
+  
+ 
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+    
+      <script> 
+        loadScript('/js/lib/busuanzi.min.js') 
+      </script>
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+      <script>
+        setTimeout(() => {localSearch("search.json")}, 0)
+      </script>
+    
+  </body>
+</html>
