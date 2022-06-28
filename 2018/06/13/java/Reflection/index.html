@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="懒懒懒蜗牛🐌">
+  <link 
+    rel="icon" 
+    href="/img/little-prince.png">
+  <title>Reflection</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="Reflection">
+    
+    
+      <meta 
+        property="og:url" 
+        content="https://lazy-snail.github.io/2018/06/13/java/Reflection/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="/img/little-prince.png">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-06-13">
+      <meta 
+        property="og:article:modified_time" 
+        content="2022-06-28">
+      <meta 
+        property="og:article:author" 
+        content="Neil">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="java">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+      
+      
+      
+      
+        
+        
+        
+        <script>
+          function prismThemeChange() {
+            if(document.getElementById('theme-color').dataset.mode === 'dark') {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism-tomorrow.min.css', '[data-prism]', 'prism-tomorrow');
+              } else {
+                loadCSS('/js/lib/prism/prism-tomorrow.min.css', 'prism', 'prism-tomorrow');
+              }
+            } else {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism.min.css', '[data-prism]', 'prism');
+              } else {
+                loadCSS('/js/lib/prism/prism.min.css', 'prism', 'prism');
+              }
+            }
+          }
+          prismThemeChange()
+        </script>
+      
+      
+        
+        <link rel="stylesheet" href="/js/lib/prism/prism-line-numbers.min.css">
+      
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+        prismThemeChange();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+    
+    <link rel="prefetch" href="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js" as="script">
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="/img/little-prince.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">懒蜗牛</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          Home
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          Archive
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      Reflection
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-06-13T05:46:45.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-06-13</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/java/" 
+          class="post-meta-link">
+          java
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>1.4k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/java/" 
+            class="post-meta-link">
+            java
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>[toc]</p>
+<h1 id="Reflection"><a href="#Reflection" class="headerlink" title="Reflection"></a>Reflection</h1><p>反射，是 java 语言的特征之一，它允许运行中的 java 程序获取自身的信息，并且可以操作类对象或类的内部属性。反射的核心是 JVM 在运行时才动态加载类或调用方法&#x2F;访问属性，它不需要事先（写代码的时候或编译期）知道运行对象是谁。<br>Oracle 官方解释：<br>Reflection enables Java code to discover information about the fields, methods and constructors of loaded classes, and to use reflected fields, methods, and constructors to operate on their underlying counterparts, within security restrictions.<br>The API accommodates applications that need access to either the public members of a target object (based on its runtime class) or the members declared by a given class. It also allows programs to suppress default reflective access control.<br>即，通过反射，可以在运行时获得程序或程序集中每一个类型的成员和成员的信息。一般，程序中对象的类型都是在编译期就确定下来的，而 Java 反射机制可以动态地创建对象并调用其属性，这样的对象的类型在编译期是未知的。所以可以通过反射机制直接创建对象，即使这个对象的类型在编译期是未知的。</p>
+<h2 id="“反射”获取类对象"><a href="#“反射”获取类对象" class="headerlink" title="“反射”获取类对象"></a>“反射”获取类对象</h2><p>一般，用户使用某个类，应该从这个类定义出发，通过这个类产生实例化对象，这是类对象的使用方式；而“反射”，则是“相反”：通过对象找到这个类。具体就是，通过 instance.getClass() 方法，得到对象所在的“package.class”名称，getClass() 作为发起一切反射操作的开端（Object 的一个方法）：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 泛型都定义为 ?，返回值都是Object。</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>除了使用 getClass() 方法（事实上一般不使用这个方法）获取类的实例化对象，还有：<br>class.class：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> cls <span class="token operator">=</span> <span class="token class-name">Person</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">;</span> <span class="token comment">// 取得Class对象</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>cls<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取打印 package.class</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>以及，使用 Class 类内部定义的一个 static 方法：forName()</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> cls <span class="token operator">=</span> <span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"package.class"</span><span class="token punctuation">)</span> <span class="token punctuation">;</span> <span class="token comment">// 取得Class对象</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>cls<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取打印 package.class</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h2><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token class-name">T</span> <span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InstantiationException</span><span class="token punctuation">,</span> <span class="token class-name">IllegalAccessException</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h1 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h1><p>反射框架主要提供以下功能（主要强调是在运行时，而非编译期间）：</p>
+<ul>
+<li>在运行时判断任意一个对象所属的类；</li>
+<li>在运行时构造任意一个类的对象；</li>
+<li>在运行时判断任意一个类所具有的成员变量和方法（甚至包括 private 方法）；</li>
+<li>在运行时调用任意一个对象的方法。</li>
+</ul>
+<h2 id="获取-class-对象"><a href="#获取-class-对象" class="headerlink" title="获取 class 对象"></a>获取 class 对象</h2><p>常用以下 3 种方式获取。</p>
+<h3 id="使用-class-类的-forName-静态方法"><a href="#使用-class-类的-forName-静态方法" class="headerlink" title="使用 class 类的 forName 静态方法"></a>使用 class 类的 forName 静态方法</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> <span class="token function">forName</span><span class="token punctuation">(</span><span class="token class-name">String</span> className<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>JDBC 开发中，通常使用这种方式加载数据库驱动：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>driver<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="直接获取某一个对象的-class"><a href="#直接获取某一个对象的-class" class="headerlink" title="直接获取某一个对象的 class"></a>直接获取某一个对象的 class</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> klass <span class="token operator">=</span> <span class="token keyword">int</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">;</span>
+<span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> classInt <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span>TYPE<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="调用某个对象的-getClass-方法"><a href="#调用某个对象的-getClass-方法" class="headerlink" title="调用某个对象的 getClass() 方法"></a>调用某个对象的 getClass() 方法</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">StringBuilder</span> str <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringBuilder</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> klass <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="判断是否为某个类的实例"><a href="#判断是否为某个类的实例" class="headerlink" title="判断是否为某个类的实例"></a>判断是否为某个类的实例</h2><p>一般，用 instanceof 关键字来判断是否为某个类的实例。同时也可以使用 isInstance() 方法判断是否为某个类的实例，这是一个 Native 方法：    </p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">myClass <span class="token keyword">instanceof</span> <span class="token class-name">Object</span><span class="token punctuation">;</span>
+<span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">boolean</span> <span class="token function">isInstance</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="创建实例"><a href="#创建实例" class="headerlink" title="创建实例"></a>创建实例</h2><p>通过反射生成对象。</p>
+<h2 id="获取构造器信息"><a href="#获取构造器信息" class="headerlink" title="获取构造器信息"></a>获取构造器信息</h2><p>通过 Class 类的 getConstructor 方法得到 Constructor 类的一个实例，而 Constructor 类有一个 newInstance 方法可以创建一个对象实例。</p>
+<ul>
+<li>getConstructor(Class… parameterTypes)<br>获得指定的构造方法，注意只能获得 public 权限的构造方法，其他访问权限的获取不到；</li>
+<li>getDeclaredConstructor(Class… parameterTypes)<br>获得指定的构造方法，可以获取到任何访问权限的构造方法；</li>
+<li>getConstructors()<br>获得所有 public 访问权限的构造方法；</li>
+<li>getDeclaredConstructors()<br>获得所有的构造方法，所有权限的构造方法。</li>
+</ul>
+<h2 id="获取方法"><a href="#获取方法" class="headerlink" title="获取方法"></a>获取方法</h2><ul>
+<li>getDeclaredMethods()<br>返回类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法；</li>
+<li>getDeclaredMethod()<br>返回一个特定的共有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法；</li>
+<li>getMethods()<br>返回某个类的所有公用（public）方法，包括其继承类的公用方法；</li>
+<li>getMethod()<br>返回一个特定的共有方法，其中第一个参数为方法名称，后面的参数为方法的参数对应 Class 的对象；</li>
+</ul>
+<h2 id="获取类的成员变量（字段）信息"><a href="#获取类的成员变量（字段）信息" class="headerlink" title="获取类的成员变量（字段）信息"></a>获取类的成员变量（字段）信息</h2><p>主要是这几个方法，和获取方法类似：</p>
+<ul>
+<li>getFiled: 访问公有的成员变量；</li>
+<li>getDeclaredField：所有已声明的成员变量。但不能得到其父类的成员变量；</li>
+<li>getFileds 和 getDeclaredFields。</li>
+</ul>
+<h2 id="调用方法"><a href="#调用方法" class="headerlink" title="调用方法"></a>调用方法</h2><p>从类中获取了一个方法后，就可以用 invoke() 来调用这个方法。invoke() 原型为:</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">invoke</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span>
+    <span class="token keyword">throws</span> <span class="token class-name">IllegalAccessException</span><span class="token punctuation">,</span> <span class="token class-name">IllegalArgumentException</span><span class="token punctuation">,</span>
+       <span class="token class-name">InvocationTargetException</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="修改-private-属性-x2F-方法"><a href="#修改-private-属性-x2F-方法" class="headerlink" title="修改 private 属性&#x2F;方法"></a>修改 private 属性&#x2F;方法</h1><p>通过以上方法可以获取实例的任何域&#x2F;方法，然后通过相应的方法设置语言访问检查权限，即可修改属性值&#x2F;调用方法</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 修改域值，非 public 需要修改访问权限</span>
+field<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+field<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>instanceOfClass<span class="token punctuation">,</span> newVvalue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 调用方法(实例名后是参数列表的实参值)</span>
+<span class="token comment">// 非 public 需要修改访问权限</span>
+method<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>instanceOfClass<span class="token punctuation">,</span> newValue<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><p>java 中很重要的两个概念：注解和动态代理，都是使用反射技术有着很紧密的联系。</p>
+<p>反射最重要的用途是开发各种通用框架。比如使用动态代理的 Spring、MyBatis 等框架都是配置化的，为了保证框架的通用性它们可以根据配置文件加载不同的类&#x2F;对象，调用不同的方法，此时就必须使用反射——运行时动态加载需要加载的对象。</p>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            Neil
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="https://lazy-snail.github.io/2018/06/13/java/Reflection/">
+            https://lazy-snail.github.io/2018/06/13/java/Reflection/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2018/06/13/java/%E5%86%85%E9%83%A8%E7%B1%BB/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">内部类 </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/06/08/java/Executor%E6%A1%86%E6%9E%B6/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">Executor框架 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Reflection"><span class="toc-number">1.</span> <span class="toc-text">Reflection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%80%9C%E5%8F%8D%E5%B0%84%E2%80%9D%E8%8E%B7%E5%8F%96%E7%B1%BB%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.</span> <span class="toc-text">“反射”获取类对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">实例化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96-class-%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.1.</span> <span class="toc-text">获取 class 对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-class-%E7%B1%BB%E7%9A%84-forName-%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用 class 类的 forName 静态方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%8E%B7%E5%8F%96%E6%9F%90%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84-class"><span class="toc-number">2.1.2.</span> <span class="toc-text">直接获取某一个对象的 class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%9F%90%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84-getClass-%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.3.</span> <span class="toc-text">调用某个对象的 getClass() 方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E4%B8%BA%E6%9F%90%E4%B8%AA%E7%B1%BB%E7%9A%84%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">判断是否为某个类的实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.3.</span> <span class="toc-text">创建实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%9E%84%E9%80%A0%E5%99%A8%E4%BF%A1%E6%81%AF"><span class="toc-number">2.4.</span> <span class="toc-text">获取构造器信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%96%B9%E6%B3%95"><span class="toc-number">2.5.</span> <span class="toc-text">获取方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%EF%BC%88%E5%AD%97%E6%AE%B5%EF%BC%89%E4%BF%A1%E6%81%AF"><span class="toc-number">2.6.</span> <span class="toc-text">获取类的成员变量（字段）信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.7.</span> <span class="toc-text">调用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-private-%E5%B1%9E%E6%80%A7-x2F-%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">修改 private 属性&#x2F;方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text">应用场景</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="/img/little-prince.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">Neil</p>
+<p class="author-description">there's a will there's a way</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>171</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>13</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>31</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Reflection"><span class="toc-number">1.</span> <span class="toc-text">Reflection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%80%9C%E5%8F%8D%E5%B0%84%E2%80%9D%E8%8E%B7%E5%8F%96%E7%B1%BB%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.</span> <span class="toc-text">“反射”获取类对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">实例化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96-class-%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.1.</span> <span class="toc-text">获取 class 对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-class-%E7%B1%BB%E7%9A%84-forName-%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用 class 类的 forName 静态方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%8E%B7%E5%8F%96%E6%9F%90%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84-class"><span class="toc-number">2.1.2.</span> <span class="toc-text">直接获取某一个对象的 class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%9F%90%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84-getClass-%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.3.</span> <span class="toc-text">调用某个对象的 getClass() 方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E4%B8%BA%E6%9F%90%E4%B8%AA%E7%B1%BB%E7%9A%84%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">判断是否为某个类的实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.3.</span> <span class="toc-text">创建实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%9E%84%E9%80%A0%E5%99%A8%E4%BF%A1%E6%81%AF"><span class="toc-number">2.4.</span> <span class="toc-text">获取构造器信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%96%B9%E6%B3%95"><span class="toc-number">2.5.</span> <span class="toc-text">获取方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%EF%BC%88%E5%AD%97%E6%AE%B5%EF%BC%89%E4%BF%A1%E6%81%AF"><span class="toc-number">2.6.</span> <span class="toc-text">获取类的成员变量（字段）信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.7.</span> <span class="toc-text">调用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-private-%E5%B1%9E%E6%80%A7-x2F-%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">修改 private 属性&#x2F;方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text">应用场景</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/Algs/">
+        <div class="categories-list-item">
+          Algs
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/algs/">
+        <div class="categories-list-item">
+          algs
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CS/">
+        <div class="categories-list-item">
+          CS
+          <span class="categories-list-item-badge">9</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CN/">
+        <div class="categories-list-item">
+          CN
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">62</span>
+        </div>
+      </a>
+    
+      <a href="/categories/backend/">
+        <div class="categories-list-item">
+          backend
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/middleware/">
+        <div class="categories-list-item">
+          middleware
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/tools/">
+        <div class="categories-list-item">
+          tools
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/DB/">
+        <div class="categories-list-item">
+          DB
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/OS/">
+        <div class="categories-list-item">
+          OS
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cpp/">
+        <div class="categories-list-item">
+          cpp
+          <span class="categories-list-item-badge">20</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Daily/">
+        <div class="categories-list-item">
+          Daily
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/py/">
+        <div class="categories-list-item">
+          py
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/java/" 
+        title="java">
+        <div class="tags-list-item">java</div>
+      </a>
+    
+      <a 
+        href="/tags/cpp/" 
+        title="cpp">
+        <div class="tags-list-item">cpp</div>
+      </a>
+    
+      <a 
+        href="/tags/OS/" 
+        title="OS">
+        <div class="tags-list-item">OS</div>
+      </a>
+    
+      <a 
+        href="/tags/DB/" 
+        title="DB">
+        <div class="tags-list-item">DB</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%AE%B9%E5%99%A8/" 
+        title="容器">
+        <div class="tags-list-item">容器</div>
+      </a>
+    
+      <a 
+        href="/tags/MySQL/" 
+        title="MySQL">
+        <div class="tags-list-item">MySQL</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%B9%B6%E5%8F%91/" 
+        title="并发">
+        <div class="tags-list-item">并发</div>
+      </a>
+    
+      <a 
+        href="/tags/JVM/" 
+        title="JVM">
+        <div class="tags-list-item">JVM</div>
+      </a>
+    
+      <a 
+        href="/tags/CN/" 
+        title="CN">
+        <div class="tags-list-item">CN</div>
+      </a>
+    
+      <a 
+        href="/tags/Algs/" 
+        title="Algs">
+        <div class="tags-list-item">Algs</div>
+      </a>
+    
+      <a 
+        href="/tags/CS/" 
+        title="CS">
+        <div class="tags-list-item">CS</div>
+      </a>
+    
+      <a 
+        href="/tags/Q-A/" 
+        title="Q&A">
+        <div class="tags-list-item">Q&amp;A</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%96%B0%E7%89%B9%E6%80%A7/" 
+        title="新特性">
+        <div class="tags-list-item">新特性</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BA%BF%E7%A8%8B/" 
+        title="线程">
+        <div class="tags-list-item">线程</div>
+      </a>
+    
+      <a 
+        href="/tags/Sort/" 
+        title="Sort">
+        <div class="tags-list-item">Sort</div>
+      </a>
+    
+      <a 
+        href="/tags/Linux/" 
+        title="Linux">
+        <div class="tags-list-item">Linux</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Reflection"><span class="toc-number">1.</span> <span class="toc-text">Reflection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%80%9C%E5%8F%8D%E5%B0%84%E2%80%9D%E8%8E%B7%E5%8F%96%E7%B1%BB%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.</span> <span class="toc-text">“反射”获取类对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">实例化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96-class-%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.1.</span> <span class="toc-text">获取 class 对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-class-%E7%B1%BB%E7%9A%84-forName-%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用 class 类的 forName 静态方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%8E%B7%E5%8F%96%E6%9F%90%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84-class"><span class="toc-number">2.1.2.</span> <span class="toc-text">直接获取某一个对象的 class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%9F%90%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84-getClass-%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.3.</span> <span class="toc-text">调用某个对象的 getClass() 方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E4%B8%BA%E6%9F%90%E4%B8%AA%E7%B1%BB%E7%9A%84%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">判断是否为某个类的实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.3.</span> <span class="toc-text">创建实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%9E%84%E9%80%A0%E5%99%A8%E4%BF%A1%E6%81%AF"><span class="toc-number">2.4.</span> <span class="toc-text">获取构造器信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%96%B9%E6%B3%95"><span class="toc-number">2.5.</span> <span class="toc-text">获取方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%EF%BC%88%E5%AD%97%E6%AE%B5%EF%BC%89%E4%BF%A1%E6%81%AF"><span class="toc-number">2.6.</span> <span class="toc-text">获取类的成员变量（字段）信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.7.</span> <span class="toc-text">调用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-private-%E5%B1%9E%E6%80%A7-x2F-%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">修改 private 属性&#x2F;方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text">应用场景</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/AOP/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringBoot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/%E6%B3%A8%E8%A7%A3-Transactional/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringMVC%20%E6%8B%A6%E6%88%AA%E5%99%A8/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2017 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          懒蜗牛
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        
+        
+      </div>
+      
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+      
+
+  
+  
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    
+<script src="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js"></script>
+
+  
+ 
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+    
+      <script> 
+        loadScript('/js/lib/busuanzi.min.js') 
+      </script>
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+      <script>
+        setTimeout(() => {localSearch("search.json")}, 0)
+      </script>
+    
+  </body>
+</html>

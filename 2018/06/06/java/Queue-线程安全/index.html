@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="懒懒懒蜗牛🐌">
+  <link 
+    rel="icon" 
+    href="/img/little-prince.png">
+  <title>Queue-线程安全</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="Queue-线程安全">
+    
+    
+      <meta 
+        property="og:url" 
+        content="https://lazy-snail.github.io/2018/06/06/java/Queue-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="/img/little-prince.png">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-06-06">
+      <meta 
+        property="og:article:modified_time" 
+        content="2022-06-28">
+      <meta 
+        property="og:article:author" 
+        content="Neil">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="java">
+        
+          <meta 
+            property="og:article:tag" 
+            content="容器">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+      
+      
+      
+      
+        
+        
+        
+        <script>
+          function prismThemeChange() {
+            if(document.getElementById('theme-color').dataset.mode === 'dark') {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism-tomorrow.min.css', '[data-prism]', 'prism-tomorrow');
+              } else {
+                loadCSS('/js/lib/prism/prism-tomorrow.min.css', 'prism', 'prism-tomorrow');
+              }
+            } else {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism.min.css', '[data-prism]', 'prism');
+              } else {
+                loadCSS('/js/lib/prism/prism.min.css', 'prism', 'prism');
+              }
+            }
+          }
+          prismThemeChange()
+        </script>
+      
+      
+        
+        <link rel="stylesheet" href="/js/lib/prism/prism-line-numbers.min.css">
+      
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+        prismThemeChange();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+    
+    <link rel="prefetch" href="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js" as="script">
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="/img/little-prince.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">懒蜗牛</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          Home
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          Archive
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      Queue-线程安全
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-06-06T06:03:07.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-06-06</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/java/" 
+          class="post-meta-link">
+          java
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>1.8k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/java/" 
+            class="post-meta-link">
+            java
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/%E5%AE%B9%E5%99%A8/" 
+            class="post-meta-link">
+            容器
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>[toc]<br>这里介绍 Queue 容器中实现了同步方法的 LinkedBlockingQueue、ConcurrentLinkedQueue、LinkedBlockingDeque、ConcurrentLinkedDeque</p>
+<h1 id="LinkedBlockingQueue-amp-ConcurrentLinkedQueue"><a href="#LinkedBlockingQueue-amp-ConcurrentLinkedQueue" class="headerlink" title="LinkedBlockingQueue &amp; ConcurrentLinkedQueue"></a>LinkedBlockingQueue &amp; ConcurrentLinkedQueue</h1><p>二者都是线程安全的队列实现。从命名可知，前者是使用锁（ReentrantLock）实现的阻塞队列（BlockingQueue），会遇到锁本身的所有可能的问题：死锁、阻塞等（名称由来），而后者是采用 CAS 实现的线程安全，不存在阻塞情况。</p>
+<h2 id="LinkedBlockingQueue"><a href="#LinkedBlockingQueue" class="headerlink" title="LinkedBlockingQueue"></a>LinkedBlockingQueue</h2><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LinkedBlockingDeque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">E</span><span class="token punctuation">></span></span>
+    <span class="token keyword">extends</span> <span class="token class-name">AbstractQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">E</span><span class="token punctuation">></span></span>
+    <span class="token keyword">implements</span> <span class="token class-name">BlockingDeque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">E</span><span class="token punctuation">></span></span><span class="token punctuation">,</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span>Serializable</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="ConcurrentLinkedQueue-并发队列"><a href="#ConcurrentLinkedQueue-并发队列" class="headerlink" title="ConcurrentLinkedQueue 并发队列"></a>ConcurrentLinkedQueue 并发队列</h2><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ConcurrentLinkedQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">E</span><span class="token punctuation">></span></span> <span class="token keyword">extends</span> <span class="token class-name">AbstractQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">E</span><span class="token punctuation">></span></span>
+        <span class="token keyword">implements</span> <span class="token class-name">Queue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">E</span><span class="token punctuation">></span></span><span class="token punctuation">,</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span>Serializable</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><ul>
+<li>对于 LinkedBlockingQueue，take 方法虽然在内部实现了加锁 wait()，但是由于其他的开销，导致性能相比于 poll + wait() 有所下降。但是如果采用 poll 方法，那么由于大量的线程存在空转的情况，导致争用处理机，导致性能急剧下降。</li>
+<li>对于 ConcurrentLinkedQueue，由于内部采用 CAS 保证并发安全，在采用 poll + wait() 时相比前者有所提升，但是不是很明显，但是对于 poll 方式，由于去除了锁的开销，同时虽然相比于其自身的 poll + wait() 方式性能下降不少，但是相对于 LinkedBlockingQueue，性能提升相当明显。</li>
+</ul>
+<h1 id="LinkedBlockingDeque-amp-ConcurrentLinkedDeque"><a href="#LinkedBlockingDeque-amp-ConcurrentLinkedDeque" class="headerlink" title="LinkedBlockingDeque &amp; ConcurrentLinkedDeque"></a>LinkedBlockingDeque &amp; ConcurrentLinkedDeque</h1><p>线程安全的双向队列，具体情况类似上面的两个。</p>
+<h1 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h1><p>BlockingQueue，使用锁机制实现（ReentrantLock），支持两个附加操作的队列：</p>
+<ul>
+<li>队列空时，获取元素的线程会等待队列变为非空；</li>
+<li>队列满时，存储元素的线程会等待队列可用。<img src="/2018/06/06/java/Queue-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/06/06/java/Queue-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95.JPG" class title="阻塞队列处理方法" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/Queue-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/06/06/java/Queue-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95.JPG" class="lozad post-image"></li>
+</ul>
+<blockquote>
+<ul>
+<li>抛出异常：当阻塞队列满时，尝试继续往队列里插入元素，会抛出 IllegalStateException(Queue full)异常。当队列为空时，尝试继续从队列里获取元素时会抛出 NoSuchElementException 异常；</li>
+<li>返回特殊值：插入方法会返回是否成功，成功则返回 true。移除方法则是从队列里拿出一个元素，如果没有则返回 null；</li>
+<li>一直阻塞：当阻塞队列满时，如果生产者线程往队列里 put 元素，队列会一直阻塞生产者线程，直到拿到数据，或者响应中断退出。当队列空时，消费者线程试图从队列里 take 元素，队列也会阻塞消费者线程，直到队列可用；</li>
+<li>超时退出：当阻塞队列满时，队列会阻塞生产者线程一段时间，如果超过一定的时间，生产者线程就会退出。</li>
+</ul>
+</blockquote>
+<p><strong>阻塞队列常用于生产者和消费者的场景</strong>。</p>
+<h2 id="阻塞队列实现"><a href="#阻塞队列实现" class="headerlink" title="阻塞队列实现"></a>阻塞队列实现</h2><p>截至 JDK1.8，包括上面的两个（LinkedBlockingQueue 和 LinkedBlockingDeque）阻塞队列实现，共有以下 7 个阻塞队列实现。</p>
+<h2 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a>ArrayBlockingQueue</h2><p>用数组实现的有界阻塞队列。此队列按照先进先出（FIFO）的原则对元素进行排序。默认情况下不保证访问者公平的访问队列，所谓公平访问队列是指阻塞的所有生产者线程或消费者线程，当队列可用时，可以按照阻塞的先后顺序访问队列，即先阻塞的生产者线程，可以先往队列里插入元素，先阻塞的消费者线程，可以先从队列里获取元素。通常情况下为了保证公平性会降低吞吐量。<br>可通过以下方式创建公平的阻塞队列（第二个参数 fair &#x3D; true 即表明创建为公平队列）：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ArrayBlockingQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span> arrayBlockingQueue <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayBlockingQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="LinkedBlockingQueue-1"><a href="#LinkedBlockingQueue-1" class="headerlink" title="LinkedBlockingQueue"></a>LinkedBlockingQueue</h2><p>用链表实现的有界阻塞队列。此队列按照先进先出的原则对元素进行排序。</p>
+<h2 id="LinkedBlockingDeque"><a href="#LinkedBlockingDeque" class="headerlink" title="LinkedBlockingDeque"></a>LinkedBlockingDeque</h2><p>由链表结构组成的双向阻塞队列。双端队列因为多了一个操作队列的入口，在多线程同时入队时，也就减少了一半的竞争。相比其他的阻塞队列，LinkedBlockingDeque 多出了双向队列的操作方法，在初始化 LinkedBlockingDeque 时可以设置容量防止其过渡膨胀。另外双向阻塞队列可以运用在“工作窃取”模式中。</p>
+<h2 id="PriorityBlockingQueue"><a href="#PriorityBlockingQueue" class="headerlink" title="PriorityBlockingQueue"></a>PriorityBlockingQueue</h2><p>支持优先级的无界阻塞队列。默认情况下元素采取自然顺序排列，也可以通过比较器 comparator 来指定元素的排序规则。</p>
+<h2 id="DelayQueue"><a href="#DelayQueue" class="headerlink" title="DelayQueue"></a>DelayQueue</h2><p>使用优先级队列实现的、支持延时获取元素的无界阻塞队列。队列使用 PriorityQueue 来实现。队列中的元素必须实现 Delayed 接口，在创建元素时可以指定多久才能从队列中获取当前元素，只有在延迟期满时才能从队列中提取元素。必须实现 compareTo来 指定元素的顺序。<br>应用场景：</p>
+<ul>
+<li>缓存系统的设计：可以用 DelayQueue 保存缓存元素的有效期，使用一个线程循环查询 DelayQueue，一旦能从 DelayQueue 中获取元素时，表示缓存有效期到了；</li>
+<li>定时任务调度。使用 DelayQueue 保存当天将会执行的任务和执行时间，一旦从 DelayQueue 中获取到任务就开始执行，如TimerQueue 就是使用 DelayQueue 实现的。</li>
+</ul>
+<h2 id="SynchronousQueue"><a href="#SynchronousQueue" class="headerlink" title="SynchronousQueue"></a>SynchronousQueue</h2><p>不存储元素的阻塞队列。每一个 put 操作必须等待一个 take 操作，否则不能继续添加元素。可以看成是一个传球手，负责把生产者线程处理的数据直接传递给消费者线程。队列本身并不存储任何元素，非常适合于传递性场景，比如在一个线程中使用的数据，传递给另外一个线程使用，吞吐量高于 LinkedBlockingQueue 和 ArrayBlockingQueue。</p>
+<h2 id="LinkedTransferQueue"><a href="#LinkedTransferQueue" class="headerlink" title="LinkedTransferQueue"></a>LinkedTransferQueue</h2><p>由链表结构组成的无界阻塞 TransferQueue 队列。相对于其他阻塞队列，多了 tryTransfer 和 transfer 方法：</p>
+<ul>
+<li>transfer方法：如果当前有消费者正在等待接收元素（消费者使用 take 方法或带时间限制的 poll 方法时），transfer 方法可以把生产者传入的元素立刻 transfer（传输）给消费者。如果没有消费者在等待接收元素，transfer 方法会将元素存放在队列的 tail 节点，并等到该元素被消费者消费了才返回。transfer 方法的关键代码如下：<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 试图把存放当前元素的 s 节点作为 tail 节点：</span>
+<span class="token class-name">Node</span> pred <span class="token operator">=</span> <span class="token function">tryAppend</span><span class="token punctuation">(</span>s<span class="token punctuation">,</span> haveData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 让 CPU 自旋等待消费者消费元素。因为自旋会消耗 CPU，</span>
+<span class="token comment">// 所以自旋一定的次数后使用 Thread.yield() 来暂停当前正在执行的线程，并执行其他线程：</span>
+<span class="token keyword">return</span> <span class="token function">awaitMatch</span><span class="token punctuation">(</span>s<span class="token punctuation">,</span> pred<span class="token punctuation">,</span> e<span class="token punctuation">,</span> <span class="token punctuation">(</span>how <span class="token operator">==</span> TIMED<span class="token punctuation">)</span><span class="token punctuation">,</span> nanos<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>tryTransfer方法：试探下生产者传入的元素是否能直接传给消费者。如果没有消费者等待接收元素，则返回 false。和 transfer方法的区别是 tryTransfer 方法无论消费者是否接收，方法都立即返回。而 transfer 方法是必须等到消费者消费了才返回。对于带有时间限制的 tryTransfer(E e, long timeout, TimeUnit unit) 方法，则是试图把生产者传入的元素直接传给消费者，但是如果没有消费者消费该元素则等待指定的时间再返回，如果超时还没消费元素，则返回 false，如果在超时时间内消费了元素，则返回 true。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/java-blocking-queue">阻塞队列</a></p>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            Neil
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="https://lazy-snail.github.io/2018/06/06/java/Queue-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">
+            https://lazy-snail.github.io/2018/06/06/java/Queue-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2018/06/07/java/JUCL/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">java-JUCL </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/06/06/java/Queue/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">Queue </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingQueue-amp-ConcurrentLinkedQueue"><span class="toc-number">1.</span> <span class="toc-text">LinkedBlockingQueue &amp; ConcurrentLinkedQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingQueue"><span class="toc-number">1.1.</span> <span class="toc-text">LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConcurrentLinkedQueue-%E5%B9%B6%E5%8F%91%E9%98%9F%E5%88%97"><span class="toc-number">1.2.</span> <span class="toc-text">ConcurrentLinkedQueue 并发队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.</span> <span class="toc-text">对比</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingDeque-amp-ConcurrentLinkedDeque"><span class="toc-number">2.</span> <span class="toc-text">LinkedBlockingDeque &amp; ConcurrentLinkedDeque</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97"><span class="toc-number">3.</span> <span class="toc-text">阻塞队列</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.1.</span> <span class="toc-text">阻塞队列实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ArrayBlockingQueue"><span class="toc-number">3.2.</span> <span class="toc-text">ArrayBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingQueue-1"><span class="toc-number">3.3.</span> <span class="toc-text">LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingDeque"><span class="toc-number">3.4.</span> <span class="toc-text">LinkedBlockingDeque</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PriorityBlockingQueue"><span class="toc-number">3.5.</span> <span class="toc-text">PriorityBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayQueue"><span class="toc-number">3.6.</span> <span class="toc-text">DelayQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SynchronousQueue"><span class="toc-number">3.7.</span> <span class="toc-text">SynchronousQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedTransferQueue"><span class="toc-number">3.8.</span> <span class="toc-text">LinkedTransferQueue</span></a></li></ol></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="/img/little-prince.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">Neil</p>
+<p class="author-description">there's a will there's a way</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>171</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>13</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>31</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingQueue-amp-ConcurrentLinkedQueue"><span class="toc-number">1.</span> <span class="toc-text">LinkedBlockingQueue &amp; ConcurrentLinkedQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingQueue"><span class="toc-number">1.1.</span> <span class="toc-text">LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConcurrentLinkedQueue-%E5%B9%B6%E5%8F%91%E9%98%9F%E5%88%97"><span class="toc-number">1.2.</span> <span class="toc-text">ConcurrentLinkedQueue 并发队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.</span> <span class="toc-text">对比</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingDeque-amp-ConcurrentLinkedDeque"><span class="toc-number">2.</span> <span class="toc-text">LinkedBlockingDeque &amp; ConcurrentLinkedDeque</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97"><span class="toc-number">3.</span> <span class="toc-text">阻塞队列</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.1.</span> <span class="toc-text">阻塞队列实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ArrayBlockingQueue"><span class="toc-number">3.2.</span> <span class="toc-text">ArrayBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingQueue-1"><span class="toc-number">3.3.</span> <span class="toc-text">LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingDeque"><span class="toc-number">3.4.</span> <span class="toc-text">LinkedBlockingDeque</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PriorityBlockingQueue"><span class="toc-number">3.5.</span> <span class="toc-text">PriorityBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayQueue"><span class="toc-number">3.6.</span> <span class="toc-text">DelayQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SynchronousQueue"><span class="toc-number">3.7.</span> <span class="toc-text">SynchronousQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedTransferQueue"><span class="toc-number">3.8.</span> <span class="toc-text">LinkedTransferQueue</span></a></li></ol></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/Algs/">
+        <div class="categories-list-item">
+          Algs
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/algs/">
+        <div class="categories-list-item">
+          algs
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CS/">
+        <div class="categories-list-item">
+          CS
+          <span class="categories-list-item-badge">9</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CN/">
+        <div class="categories-list-item">
+          CN
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">62</span>
+        </div>
+      </a>
+    
+      <a href="/categories/backend/">
+        <div class="categories-list-item">
+          backend
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/middleware/">
+        <div class="categories-list-item">
+          middleware
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/tools/">
+        <div class="categories-list-item">
+          tools
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/DB/">
+        <div class="categories-list-item">
+          DB
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/OS/">
+        <div class="categories-list-item">
+          OS
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cpp/">
+        <div class="categories-list-item">
+          cpp
+          <span class="categories-list-item-badge">20</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Daily/">
+        <div class="categories-list-item">
+          Daily
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/py/">
+        <div class="categories-list-item">
+          py
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/java/" 
+        title="java">
+        <div class="tags-list-item">java</div>
+      </a>
+    
+      <a 
+        href="/tags/cpp/" 
+        title="cpp">
+        <div class="tags-list-item">cpp</div>
+      </a>
+    
+      <a 
+        href="/tags/OS/" 
+        title="OS">
+        <div class="tags-list-item">OS</div>
+      </a>
+    
+      <a 
+        href="/tags/DB/" 
+        title="DB">
+        <div class="tags-list-item">DB</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%AE%B9%E5%99%A8/" 
+        title="容器">
+        <div class="tags-list-item">容器</div>
+      </a>
+    
+      <a 
+        href="/tags/MySQL/" 
+        title="MySQL">
+        <div class="tags-list-item">MySQL</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%B9%B6%E5%8F%91/" 
+        title="并发">
+        <div class="tags-list-item">并发</div>
+      </a>
+    
+      <a 
+        href="/tags/JVM/" 
+        title="JVM">
+        <div class="tags-list-item">JVM</div>
+      </a>
+    
+      <a 
+        href="/tags/CN/" 
+        title="CN">
+        <div class="tags-list-item">CN</div>
+      </a>
+    
+      <a 
+        href="/tags/Algs/" 
+        title="Algs">
+        <div class="tags-list-item">Algs</div>
+      </a>
+    
+      <a 
+        href="/tags/CS/" 
+        title="CS">
+        <div class="tags-list-item">CS</div>
+      </a>
+    
+      <a 
+        href="/tags/Q-A/" 
+        title="Q&A">
+        <div class="tags-list-item">Q&amp;A</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%96%B0%E7%89%B9%E6%80%A7/" 
+        title="新特性">
+        <div class="tags-list-item">新特性</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BA%BF%E7%A8%8B/" 
+        title="线程">
+        <div class="tags-list-item">线程</div>
+      </a>
+    
+      <a 
+        href="/tags/Sort/" 
+        title="Sort">
+        <div class="tags-list-item">Sort</div>
+      </a>
+    
+      <a 
+        href="/tags/Linux/" 
+        title="Linux">
+        <div class="tags-list-item">Linux</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingQueue-amp-ConcurrentLinkedQueue"><span class="toc-number">1.</span> <span class="toc-text">LinkedBlockingQueue &amp; ConcurrentLinkedQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingQueue"><span class="toc-number">1.1.</span> <span class="toc-text">LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConcurrentLinkedQueue-%E5%B9%B6%E5%8F%91%E9%98%9F%E5%88%97"><span class="toc-number">1.2.</span> <span class="toc-text">ConcurrentLinkedQueue 并发队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.</span> <span class="toc-text">对比</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingDeque-amp-ConcurrentLinkedDeque"><span class="toc-number">2.</span> <span class="toc-text">LinkedBlockingDeque &amp; ConcurrentLinkedDeque</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97"><span class="toc-number">3.</span> <span class="toc-text">阻塞队列</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.1.</span> <span class="toc-text">阻塞队列实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ArrayBlockingQueue"><span class="toc-number">3.2.</span> <span class="toc-text">ArrayBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingQueue-1"><span class="toc-number">3.3.</span> <span class="toc-text">LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedBlockingDeque"><span class="toc-number">3.4.</span> <span class="toc-text">LinkedBlockingDeque</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PriorityBlockingQueue"><span class="toc-number">3.5.</span> <span class="toc-text">PriorityBlockingQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayQueue"><span class="toc-number">3.6.</span> <span class="toc-text">DelayQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SynchronousQueue"><span class="toc-number">3.7.</span> <span class="toc-text">SynchronousQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LinkedTransferQueue"><span class="toc-number">3.8.</span> <span class="toc-text">LinkedTransferQueue</span></a></li></ol></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/AOP/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringBoot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/%E6%B3%A8%E8%A7%A3-Transactional/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringMVC%20%E6%8B%A6%E6%88%AA%E5%99%A8/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2017 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          懒蜗牛
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        
+        
+      </div>
+      
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+      
+
+  
+  
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    
+<script src="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js"></script>
+
+  
+ 
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+    
+      <script> 
+        loadScript('/js/lib/busuanzi.min.js') 
+      </script>
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+      <script>
+        setTimeout(() => {localSearch("search.json")}, 0)
+      </script>
+    
+  </body>
+</html>

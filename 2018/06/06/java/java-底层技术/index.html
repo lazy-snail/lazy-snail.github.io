@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="懒懒懒蜗牛🐌">
+  <link 
+    rel="icon" 
+    href="/img/little-prince.png">
+  <title>java-底层技术</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="java-底层技术">
+    
+    
+      <meta 
+        property="og:url" 
+        content="https://lazy-snail.github.io/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="/img/little-prince.png">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-06-06">
+      <meta 
+        property="og:article:modified_time" 
+        content="2022-06-28">
+      <meta 
+        property="og:article:author" 
+        content="Neil">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="java">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+      
+      
+      
+      
+        
+        
+        
+        <script>
+          function prismThemeChange() {
+            if(document.getElementById('theme-color').dataset.mode === 'dark') {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism-tomorrow.min.css', '[data-prism]', 'prism-tomorrow');
+              } else {
+                loadCSS('/js/lib/prism/prism-tomorrow.min.css', 'prism', 'prism-tomorrow');
+              }
+            } else {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism.min.css', '[data-prism]', 'prism');
+              } else {
+                loadCSS('/js/lib/prism/prism.min.css', 'prism', 'prism');
+              }
+            }
+          }
+          prismThemeChange()
+        </script>
+      
+      
+        
+        <link rel="stylesheet" href="/js/lib/prism/prism-line-numbers.min.css">
+      
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+        prismThemeChange();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+    
+    <link rel="prefetch" href="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js" as="script">
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="/img/little-prince.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">懒蜗牛</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          Home
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          Archive
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      java-底层技术
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-06-06T00:35:12.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-06-06</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/java/" 
+          class="post-meta-link">
+          java
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>4.3k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/java/" 
+            class="post-meta-link">
+            java
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>[toc]<br>一些语言技术实现。</p>
+<h1 id="COW-优化策略"><a href="#COW-优化策略" class="headerlink" title="COW 优化策略"></a>COW 优化策略</h1><p>COW（Copy-On-Write，写时复制）是一种用于程序设计中的优化策略：一开始大家都在共享同一个内容，当某个人（线程）想要修改这个内容的时候，才会真正把内容拷贝并形成一个新的内容然后再修改。这是一种延时懒惰策略，主要应用于多并发场景。</p>
+<h2 id="COW-容器"><a href="#COW-容器" class="headerlink" title="COW 容器"></a>COW 容器</h2><p>i.e. 写时复制容器。JDK1.5 引入了两个 COW 机制的实现类容器：CopyOnWriteArrayList、CopyOnWriteArraySet。简单理解就是：当需要往容器添加元素时，不直接往当前容器添加，而是将当前容器进行拷贝，复制出一个新的容器，然后将待添加元素加入到新的容器中，添加完成后，再将原容器的引用指向新容器。这样做的好处是，可以 <strong>对容器进行并发读而不需要加锁</strong>，因为当前容器不会添加容器，也就不会改变。整体上是一种读写分离的思想，读和写在不同的容器进行。</p>
+
+<p>整个 add 操作在锁保护下进行，避免多线程并发造成副本混乱：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">E</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>lock<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> elements <span class="token operator">=</span> <span class="token function">getArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> len <span class="token operator">=</span> elements<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+        <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> newElements <span class="token operator">=</span> <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">copyOf</span><span class="token punctuation">(</span>elements<span class="token punctuation">,</span> len <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        newElements<span class="token punctuation">[</span>len<span class="token punctuation">]</span> <span class="token operator">=</span> e<span class="token punctuation">;</span>
+        <span class="token function">setArray</span><span class="token punctuation">(</span>newElements<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>由于所有的写操作都是在新数组进行，如果有并发写，则通过锁来控制；如果并发读，则：</p>
+<ul>
+<li>如果写操作未完成，那么直接读取原数组的数据；</li>
+<li>如果写操作已完成，但引用还未指向新数组，那么也是直接读取原数组的数据；</li>
+<li>如果写操作已完成，并且引用已指向新数组，那么直接读取新数组的数据；<br>可见，读操作可以不加锁。</li>
+</ul>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>适用于 <strong>读多写少的并发场景</strong>。比如白名单，黑名单，商品类目的访问和更新场景等。</p>
+<h2 id="问题和解决"><a href="#问题和解决" class="headerlink" title="问题和解决"></a>问题和解决</h2><ul>
+<li>内存占用：根据实现原理，当可变操作频繁发生时，会导致效率低下，也会造成内存占用过多的问题。实用场景，根据实际需要，初始化 COW 容器大小，减少扩容开销；使用批量添加，减少容器复制次数。</li>
+<li>数据一致性问题：COW 只能保证数据的最终一致性，不能保证数据的实时一致性。如果希望写入的数据马上能读取到，此时不适合适用 COW 容器。</li>
+</ul>
+<p>一些泛型数据结构。</p>
+<h1 id="跳表（SkipList）"><a href="#跳表（SkipList）" class="headerlink" title="跳表（SkipList）"></a>跳表（SkipList）</h1><h2 id="从红黑树到跳表"><a href="#从红黑树到跳表" class="headerlink" title="从红黑树到跳表"></a>从红黑树到跳表</h2><p>目前常用的 key-value 数据结构有三种：Hash 表、红黑树、SkipList。各自优缺点（不考虑删除操作）：</p>
+<ul>
+<li>Hash表：插入、查找最快，为 O(1)；如使用链表实现则可实现无锁；数据有序化需要显式的排序操作。</li>
+<li>红黑树：插入、查找为 O(logn)，但常数项较小；无锁实现的复杂性很高，一般需要加锁；数据天然有序。</li>
+<li>SkipList：插入、查找为 O(logn)，但常数项比红黑树要大；底层结构为链表，可无锁实现（CAS）；数据天然有序。</li>
+</ul>
+<p>如果要实现一个 key-value 结构，需求的功能有插入、查找、迭代、修改，那么首先 Hash 表就不是很适合了：因为迭代的时间复杂度比较高；而红黑树的插入很可能会涉及多个结点的旋转、变色操作，因此需要在外层加锁，这无形中降低了它可能的并发度；而 SkipList 底层是用链表实现的，可以实现为 lock free，同时它还有着不错的性能（单线程下只比红黑树略慢），非常适合用来实现 key-value 结构。</p>
+<p>JDK 中提供的基于红黑树的 TreeMap 保证内部元素有序，但非线程安全的，而且红黑树的实现中维持二叉树的平衡是个非常复杂的实现，并且（如果实现并发安全的话）并发环境下保持平衡的操作会使性能受到一定影响。<br>跳表（SkipList）是一种随机化的数据结构，是一种 <strong>空间换取时间</strong> 的算法：建立多级索引，以（近似）二分查找的方式遍历一个有序链表。</p>
+<p>跳表所实现的功能和红黑树类似。基于排序的索引结构，其效率和红黑树相近，但实现难度和编程难度更简单，且在并发环境下表现良好（这也是选择它作为一些容器类的线程安全版本底层数据结构的原因）。相应地，以空间换时间本就意味着空间效率的降低，这种折中在数据结构实现中经常遇到。性质：</p>
+<ul>
+<li>由很多层结构组成</li>
+<li>每一层都是一个有序的链表</li>
+<li>底层(Level 1)的链表包含所有元素</li>
+<li>如果一个元素出现在 Level i 的链表中，则它在 Level i 之下的链表也都会出现。</li>
+<li>每个节点包含两个指针，一个指向同一链表中的下一个元素，一个指向下面一层的元素。</li>
+</ul>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>首先，从命名可见它是基于链表的数据结构，其次它又是一种多层次的链表结构。使用概率均衡技术（而不是强制性均衡），使得增&#x2F;删操作比传统平衡树更为简洁高效。</p>
+<img src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E4%B8%80%E5%B1%82%E8%B7%B3%E8%A1%A8%E7%AE%80%E5%9B%BE.jpg" class title="一层跳表" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E4%B8%80%E5%B1%82%E8%B7%B3%E8%A1%A8%E7%AE%80%E5%9B%BE.jpg" class="lozad post-image">
+
+<p>如图，类比传统链表的操作时间复杂度，跳表（一层）可以将查询降低到 O(n&#x2F;2)——查询种会跳过部分节点，而 <strong>通过随机函数生成链表内每个节点包含多少个指向后续元素的指针</strong> 的方式（含有概率事件的意味），构造出多层次链表结构，从而理论上降低至二叉查找级别：</p>
+<img src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E5%A4%9A%E5%B1%82%E8%B7%B3%E8%A1%A8%E7%AE%80%E5%9B%BE.jpg" class title="多层跳表" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E5%A4%9A%E5%B1%82%E8%B7%B3%E8%A1%A8%E7%AE%80%E5%9B%BE.jpg" class="lozad post-image">
+
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><p>以下为查找 19 的过程。</p>
+<img src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E8%B7%B3%E8%A1%A8%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9C.jpg" class title="跳表查找操作" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E8%B7%B3%E8%A1%A8%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9C.jpg" class="lozad post-image">
+
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p>执行以下步骤：</p>
+<ul>
+<li>通过查找定位到需要插入的位置；</li>
+<li>申请新的节点；</li>
+<li>调整指针。<br>以插入 17 为例：<img src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E8%B7%B3%E8%A1%A8%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C.png" class title="跳表插入操作" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E8%B7%B3%E8%A1%A8%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C.png" class="lozad post-image"></li>
+</ul>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>类似于插入：</p>
+<ul>
+<li>通过查找定位到需要删除的节点；</li>
+<li>删除节点；</li>
+<li>调整指针。<img src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E8%B7%B3%E8%A1%A8%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C.png" class title="跳表删除操作" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/%E8%B7%B3%E8%A1%A8%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C.png" class="lozad post-image"></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ict2014/article/details/17394259" title="跳表实现原理">实现原理</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/bigtree_3721/article/details/51291974" title="跳表实现原理">实现原理</a></p>
+<h1 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h1><p>几乎所有现代处理器都包含了某种形式的原子读-改-写的特殊指令，如 CAS、关联加载&#x2F;条件存储（Load-Linked&#x2F;Store-Conditional），可以自动更新共享数据，而且能够检测到其他线程的干扰。<br>Compare and Swap：比较并交换，就是借助了 CPU 的这些特殊指令实现的，是 java.util.concurrent（JUC）包中实现的区别于 synchronized 同步锁的一种乐观锁，非阻塞算法（一个线程的失败或挂起不应该影响其他线程的失败或挂起）。<br>CAS 有 3 个操作数，内存值 V，旧的预期值 A，要修改的新值 B。当且仅当预期值 A 和内存值 V 相同时，将内存值 V 修改为 B，否则什么都不做：首先读取内存位置 V 的值 A，计算是否符合修改条件，是，则以原子方式将 V 中的值由 A 变成 B，期间会检测是否有其他线程干扰（修改 V 值），有干扰则进入失败重试阶段；否，则不进行任何操作，并返回 V 中的值。<br>程序内部执行 CAS 并不需要执行 JVM 代码、系统调用或线程调度操作。而 CAS 的缺点主要是：它将使调用者处理竞争问题（重试、回退、放弃等），而在锁中竞争问题是自动处理的（不需要应用开发者再处理）：线程在获得锁之前一直阻塞。<br>java 的 CAS 同时具有 volatile 的读和写的内存语义。</p>
+<h2 id="JNI-调用-和-CPU-锁"><a href="#JNI-调用-和-CPU-锁" class="headerlink" title="JNI 调用 和 CPU 锁"></a>JNI 调用 和 CPU 锁</h2><p>java 中，CAS 通过调用 JNI（Java Native Interface，java 本地调用，允许 java 调用其他语言）代码实现。一般借助 C 来调用 CPU 底层指令实现。这属于硬件实现细节，涉及到 CPU 硬件设计中的锁概念。<br>CPU 有 3 种类型的锁：</p>
+<ul>
+<li>自动保证基本内存操作的原子性<br>首先处理器会自动保证基本的内存操作的原子性。处理器保证从系统内存当中读取或者写入一个字节是原子的，意思是当一个处理器读取一个字节时，其他处理器不能访问这个字节的内存地址。处理器能自动保证单处理器对同一个缓存行里进行 16&#x2F;32&#x2F;64 位的操作是原子的，但是复杂的内存操作处理器不能自动保证其原子性，比如跨总线宽度，跨多个缓存行，跨页表的访问。但是处理器提供总线锁定和缓存锁定两个机制来保证复杂内存操作的原子性：</li>
+<li>总线锁保证原子性<br>第一个机制是通过总线锁保证原子性。如果多个处理器同时对共享变量进行读改写（i++就是经典的读改写操作）操作，那么共享变量就会被多个处理器同时进行操作，这样读改写操作就不是原子的，操作完之后共享变量的值会和期望的不一致，举个例子：如果i&#x3D;1,我们进行两次i++操作，我们期望的结果是3，但是有可能结果是2。如下图：<img src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/CPU%E6%80%BB%E7%BA%BF%E9%94%81%E7%A4%BA%E4%BE%8B.png" class title="CPU总线锁示例" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/CPU%E6%80%BB%E7%BA%BF%E9%94%81%E7%A4%BA%E4%BE%8B.png" class="lozad post-image">
+原因是有可能多个处理器同时从各自的缓存中读取变量 i，分别进行加一操作，然后分别写入系统内存当中。那么想要保证读改写共享变量的操作是原子的，就必须保证 CPU1 读改写共享变量的时候，CPU2 不能操作缓存了该共享变量内存地址的缓存。<br>处理器使用总线锁就是来解决这个问题的。所谓总线锁就是使用处理器提供的一个 LOCK＃ 信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，那么该处理器可以独占使用共享内存。</li>
+<li>缓存锁保证原子性<br>第二个机制是通过缓存锁定保证原子性。在同一时刻我们只需保证对某个内存地址的操作是原子性即可，但总线锁定把 CPU 和内存之间通信锁住了，这使得锁定期间，其他处理器不能操作其他内存地址的数据，所以总线锁定的开销比较大，最近的处理器在某些场合下使用缓存锁定代替总线锁定来进行优化。<br>频繁使用的内存会缓存在处理器的 L1、L2 和 L3 高速缓存里，那么原子操作就可以直接在处理器内部缓存中进行，并不需要声明总线锁，在奔腾6和最近的处理器中可以使用“缓存锁定”的方式来实现复杂的原子性。所谓“缓存锁定”就是如果缓存在处理器缓存行中内存区域在LOCK操作期间被锁定，当它执行锁操作回写内存时，处理器不在总线上声言 LOCK＃ 信号，而是修改内部的内存地址，并允许它的缓存一致性机制来保证操作的原子性，因为缓存一致性机制会阻止同时修改被两个以上处理器缓存的内存区域数据，当其他处理器回写已被锁定的缓存行的数据时会起缓存行无效，在例1中，当 CPU1 修改缓存行中的i时使用缓存锁定，那么 CPU2 就不能同时缓存了 i 的缓存行。<br>但是有两种情况下处理器不会使用缓存锁定:<blockquote>
+<ul>
+<li>当操作的数据不能被缓存在处理器内部，或操作的数据跨多个缓存行（cache line），此时处理器会调用总线锁定；</li>
+<li>有些处理器不支持缓存锁定。对于 Intel486 和奔腾处理器，就算锁定的内存区域在处理器的缓存行中也会调用总线锁定。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h2 id="CAS-缺陷"><a href="#CAS-缺陷" class="headerlink" title="CAS 缺陷"></a>CAS 缺陷</h2><p>CAS 虽然很高效地实现了原子操作，但是 CAS 仍然存在 3 个问题：</p>
+<ul>
+<li>ABA问题。<br>因为 CAS 需要在操作值的时候检查下值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是 A，变成了 B，又变成了 A，那么使用 CAS 进行检查时会发现它的值没有发生变化，但是实际上却变化了。ABA 问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号 +1，那么 A-B-A 就会变成 1A-2B-3A。从 Java1.5 开始 JDK 的 atomic 包里提供了一个类 AtomicStampedReference 来解决 ABA 问题。这个类的 compareAndSet 方法作用是首先检查当前引用是否等于预期引用，并且当前标志是否等于预期标志，如果全部相等，则以原子方式将该引用和该标志的值设置为给定的更新值；</li>
+<li>循环时间长、开销大。<br>自旋 CAS 如果长时间不成功，会给 CPU 带来非常大的执行开销。如果 JVM 能支持处理器提供的 pause 指令那么效率会有一定的提升，pause 指令有两个作用，第一它可以延迟流水线执行指令（de-pipeline）,使 CPU 不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零。第二它可以避免在退出循环的时候因内存顺序冲突（memory order violation）而引起 CPU 流水线被清空（CPU pipeline flush），从而提高 CPU 的执行效率；</li>
+<li>只能保证一个共享变量的原子操作。<br>当对一个共享变量执行操作时，我们可以使用循环 CAS 的方式来保证原子操作，但是对多个共享变量操作时，循环 CAS 就无法保证操作的原子性，这个时候就可以用锁，或者有一个取巧的办法，就是把多个共享变量合并成一个共享变量来操作。比如有两个共享变量 i＝2,j&#x3D;a，合并一下 ij&#x3D;2a，然后用 CAS 来操作 ij。从 Java1.5 开始 JDK 提供了 AtomicReference 类来保证引用对象之间的原子性，可以把多个变量放在一个对象里来进行 CAS 操作。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://zl198751.iteye.com/blog/1848575">CAS 分析</a></p>
+<h1 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h1><p>AQS：AbstractQueuedSynchronizer，抽象队列同步器，定义了一套多线程访问共享资源的同步器框架。</p>
+<img src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/AQS%E6%A1%86%E6%9E%B6.png" class title="框架" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/AQS%E6%A1%86%E6%9E%B6.png" class="lozad post-image">
+<p>它维护了一个 volatile int state（代表共享资源，用来维护同步状态）和一个 FIFO 线程等待队列（多线程争用资源被阻塞时会进入此队列）。state 的访问方式有三种:</p>
+<ul>
+<li>getState()</li>
+<li>setState()</li>
+<li>compareAndSetState()</li>
+</ul>
+<p>AQS 定义两种资源共享方式：Exclusive（独占，只有一个线程能执行，如 ReentrantLock）和 Share（共享，多个线程可同时执行，如 Semaphore&#x2F;CountDownLatch）。通过 state 字段描述有多少线程持有锁和锁的种类，用标志位标示独占锁&#x2F;共享锁以及（如果共享）锁被持有的数量、锁的可重入性以及（如果可重入）重入次数等。<br>不同的自定义同步器争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队&#x2F;唤醒出队等），AQS 已经在顶层实现。<br>基于 AQS 实现的同步器有：ReentrantLock、Semaphore、ReentrantReadWriteLock、CountDownLatch、FutureTask 等。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/bigtree_3721/article/details/79317298">AQS</a></p>
+<h1 id="CLH-MCS"><a href="#CLH-MCS" class="headerlink" title="CLH MCS"></a>CLH MCS</h1><h2 id="CLH-锁"><a href="#CLH-锁" class="headerlink" title="CLH 锁"></a>CLH 锁</h2><p>Craig, Landin, and Hagersten  locks: 一个自旋锁，能确保无饥饿性，提供先来先服务的公平性。基于链表的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，它不断轮询前驱的状态，如果发现前驱释放了锁就结束自旋。</p>
+<h2 id="MCS-锁"><a href="#MCS-锁" class="headerlink" title="MCS 锁"></a>MCS 锁</h2><p>MCS Spinlock 是一种基于链表的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，直接前驱负责通知其结束自旋，从而极大地减少了不必要的处理器缓存同步的次数，降低了总线和内存的开销。</p>
+<h2 id="vs"><a href="#vs" class="headerlink" title="vs"></a>vs</h2><ul>
+<li>从代码实现来看，CLH比MCS要简单得多。</li>
+<li>从自旋的条件来看，CLH是在前驱节点的属性上自旋，而MCS是在本地属性变量上自旋</li>
+<li>从链表队列来看，CLH的队列是隐式的，CLHNode并不实际持有下一个节点；MCS的队列是物理存在的。</li>
+<li>CLH锁释放时只需要改变自己的属性，MCS锁释放则需要改变后继节点的属性。<br>注意：这里实现的锁都是独占的，且不能重入的。</li>
+</ul>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            Neil
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="https://lazy-snail.github.io/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/">
+            https://lazy-snail.github.io/2018/06/06/java/java-%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2018/06/06/java/Set/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">Set </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/06/06/java/java-%E5%85%B3%E9%94%AE%E5%AD%97/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">java-关键字 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#COW-%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-number">1.</span> <span class="toc-text">COW 优化策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#COW-%E5%AE%B9%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">COW 容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3"><span class="toc-number">1.3.</span> <span class="toc-text">问题和解决</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%B3%E8%A1%A8%EF%BC%88SkipList%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">跳表（SkipList）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E7%BA%A2%E9%BB%91%E6%A0%91%E5%88%B0%E8%B7%B3%E8%A1%A8"><span class="toc-number">2.1.</span> <span class="toc-text">从红黑树到跳表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">2.3.1.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5"><span class="toc-number">2.3.2.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">2.3.3.</span> <span class="toc-text">删除</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CAS"><span class="toc-number">3.</span> <span class="toc-text">CAS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JNI-%E8%B0%83%E7%94%A8-%E5%92%8C-CPU-%E9%94%81"><span class="toc-number">3.1.</span> <span class="toc-text">JNI 调用 和 CPU 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS-%E7%BC%BA%E9%99%B7"><span class="toc-number">3.2.</span> <span class="toc-text">CAS 缺陷</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AQS"><span class="toc-number">4.</span> <span class="toc-text">AQS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CLH-MCS"><span class="toc-number">5.</span> <span class="toc-text">CLH MCS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CLH-%E9%94%81"><span class="toc-number">5.1.</span> <span class="toc-text">CLH 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCS-%E9%94%81"><span class="toc-number">5.2.</span> <span class="toc-text">MCS 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vs"><span class="toc-number">5.3.</span> <span class="toc-text">vs</span></a></li></ol></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="/img/little-prince.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">Neil</p>
+<p class="author-description">there's a will there's a way</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>171</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>13</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>31</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#COW-%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-number">1.</span> <span class="toc-text">COW 优化策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#COW-%E5%AE%B9%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">COW 容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3"><span class="toc-number">1.3.</span> <span class="toc-text">问题和解决</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%B3%E8%A1%A8%EF%BC%88SkipList%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">跳表（SkipList）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E7%BA%A2%E9%BB%91%E6%A0%91%E5%88%B0%E8%B7%B3%E8%A1%A8"><span class="toc-number">2.1.</span> <span class="toc-text">从红黑树到跳表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">2.3.1.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5"><span class="toc-number">2.3.2.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">2.3.3.</span> <span class="toc-text">删除</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CAS"><span class="toc-number">3.</span> <span class="toc-text">CAS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JNI-%E8%B0%83%E7%94%A8-%E5%92%8C-CPU-%E9%94%81"><span class="toc-number">3.1.</span> <span class="toc-text">JNI 调用 和 CPU 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS-%E7%BC%BA%E9%99%B7"><span class="toc-number">3.2.</span> <span class="toc-text">CAS 缺陷</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AQS"><span class="toc-number">4.</span> <span class="toc-text">AQS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CLH-MCS"><span class="toc-number">5.</span> <span class="toc-text">CLH MCS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CLH-%E9%94%81"><span class="toc-number">5.1.</span> <span class="toc-text">CLH 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCS-%E9%94%81"><span class="toc-number">5.2.</span> <span class="toc-text">MCS 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vs"><span class="toc-number">5.3.</span> <span class="toc-text">vs</span></a></li></ol></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/Algs/">
+        <div class="categories-list-item">
+          Algs
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/algs/">
+        <div class="categories-list-item">
+          algs
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CS/">
+        <div class="categories-list-item">
+          CS
+          <span class="categories-list-item-badge">9</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CN/">
+        <div class="categories-list-item">
+          CN
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">62</span>
+        </div>
+      </a>
+    
+      <a href="/categories/backend/">
+        <div class="categories-list-item">
+          backend
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/middleware/">
+        <div class="categories-list-item">
+          middleware
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/tools/">
+        <div class="categories-list-item">
+          tools
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/DB/">
+        <div class="categories-list-item">
+          DB
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/OS/">
+        <div class="categories-list-item">
+          OS
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cpp/">
+        <div class="categories-list-item">
+          cpp
+          <span class="categories-list-item-badge">20</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Daily/">
+        <div class="categories-list-item">
+          Daily
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/py/">
+        <div class="categories-list-item">
+          py
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/java/" 
+        title="java">
+        <div class="tags-list-item">java</div>
+      </a>
+    
+      <a 
+        href="/tags/cpp/" 
+        title="cpp">
+        <div class="tags-list-item">cpp</div>
+      </a>
+    
+      <a 
+        href="/tags/OS/" 
+        title="OS">
+        <div class="tags-list-item">OS</div>
+      </a>
+    
+      <a 
+        href="/tags/DB/" 
+        title="DB">
+        <div class="tags-list-item">DB</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%AE%B9%E5%99%A8/" 
+        title="容器">
+        <div class="tags-list-item">容器</div>
+      </a>
+    
+      <a 
+        href="/tags/MySQL/" 
+        title="MySQL">
+        <div class="tags-list-item">MySQL</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%B9%B6%E5%8F%91/" 
+        title="并发">
+        <div class="tags-list-item">并发</div>
+      </a>
+    
+      <a 
+        href="/tags/JVM/" 
+        title="JVM">
+        <div class="tags-list-item">JVM</div>
+      </a>
+    
+      <a 
+        href="/tags/CN/" 
+        title="CN">
+        <div class="tags-list-item">CN</div>
+      </a>
+    
+      <a 
+        href="/tags/Algs/" 
+        title="Algs">
+        <div class="tags-list-item">Algs</div>
+      </a>
+    
+      <a 
+        href="/tags/CS/" 
+        title="CS">
+        <div class="tags-list-item">CS</div>
+      </a>
+    
+      <a 
+        href="/tags/Q-A/" 
+        title="Q&A">
+        <div class="tags-list-item">Q&amp;A</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%96%B0%E7%89%B9%E6%80%A7/" 
+        title="新特性">
+        <div class="tags-list-item">新特性</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BA%BF%E7%A8%8B/" 
+        title="线程">
+        <div class="tags-list-item">线程</div>
+      </a>
+    
+      <a 
+        href="/tags/Sort/" 
+        title="Sort">
+        <div class="tags-list-item">Sort</div>
+      </a>
+    
+      <a 
+        href="/tags/Linux/" 
+        title="Linux">
+        <div class="tags-list-item">Linux</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#COW-%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-number">1.</span> <span class="toc-text">COW 优化策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#COW-%E5%AE%B9%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">COW 容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3"><span class="toc-number">1.3.</span> <span class="toc-text">问题和解决</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%B3%E8%A1%A8%EF%BC%88SkipList%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">跳表（SkipList）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E7%BA%A2%E9%BB%91%E6%A0%91%E5%88%B0%E8%B7%B3%E8%A1%A8"><span class="toc-number">2.1.</span> <span class="toc-text">从红黑树到跳表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.</span> <span class="toc-text">数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">2.3.1.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5"><span class="toc-number">2.3.2.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">2.3.3.</span> <span class="toc-text">删除</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CAS"><span class="toc-number">3.</span> <span class="toc-text">CAS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JNI-%E8%B0%83%E7%94%A8-%E5%92%8C-CPU-%E9%94%81"><span class="toc-number">3.1.</span> <span class="toc-text">JNI 调用 和 CPU 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS-%E7%BC%BA%E9%99%B7"><span class="toc-number">3.2.</span> <span class="toc-text">CAS 缺陷</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AQS"><span class="toc-number">4.</span> <span class="toc-text">AQS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CLH-MCS"><span class="toc-number">5.</span> <span class="toc-text">CLH MCS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CLH-%E9%94%81"><span class="toc-number">5.1.</span> <span class="toc-text">CLH 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCS-%E9%94%81"><span class="toc-number">5.2.</span> <span class="toc-text">MCS 锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vs"><span class="toc-number">5.3.</span> <span class="toc-text">vs</span></a></li></ol></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/AOP/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringBoot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/%E6%B3%A8%E8%A7%A3-Transactional/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringMVC%20%E6%8B%A6%E6%88%AA%E5%99%A8/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2017 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          懒蜗牛
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        
+        
+      </div>
+      
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+      
+
+  
+  
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    
+<script src="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js"></script>
+
+  
+ 
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+    
+      <script> 
+        loadScript('/js/lib/busuanzi.min.js') 
+      </script>
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+      <script>
+        setTimeout(() => {localSearch("search.json")}, 0)
+      </script>
+    
+  </body>
+</html>

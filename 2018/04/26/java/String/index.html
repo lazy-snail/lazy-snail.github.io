@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="懒懒懒蜗牛🐌">
+  <link 
+    rel="icon" 
+    href="/img/little-prince.png">
+  <title>String</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="String">
+    
+    
+      <meta 
+        property="og:url" 
+        content="https://lazy-snail.github.io/2018/04/26/java/String/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="/img/little-prince.png">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-04-26">
+      <meta 
+        property="og:article:modified_time" 
+        content="2022-06-28">
+      <meta 
+        property="og:article:author" 
+        content="Neil">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="java">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+      
+      
+      
+      
+        
+        
+        
+        <script>
+          function prismThemeChange() {
+            if(document.getElementById('theme-color').dataset.mode === 'dark') {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism-tomorrow.min.css', '[data-prism]', 'prism-tomorrow');
+              } else {
+                loadCSS('/js/lib/prism/prism-tomorrow.min.css', 'prism', 'prism-tomorrow');
+              }
+            } else {
+              if(document.querySelector('[data-prism]')) {
+                changeCSS('/js/lib/prism/prism.min.css', '[data-prism]', 'prism');
+              } else {
+                loadCSS('/js/lib/prism/prism.min.css', 'prism', 'prism');
+              }
+            }
+          }
+          prismThemeChange()
+        </script>
+      
+      
+        
+        <link rel="stylesheet" href="/js/lib/prism/prism-line-numbers.min.css">
+      
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+        prismThemeChange();
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+        prismThemeChange();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+    
+    <link rel="prefetch" href="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js" as="script">
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="/img/little-prince.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">懒蜗牛</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          Home
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          Archive
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      String
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-04-26T14:55:01.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-04-26</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/java/" 
+          class="post-meta-link">
+          java
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>2.3k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/java/" 
+            class="post-meta-link">
+            java
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <h3 id="x3D-x3D-vs-equals-比较问题"><a href="#x3D-x3D-vs-equals-比较问题" class="headerlink" title="&#x3D;&#x3D; vs equals() 比较问题"></a>&#x3D;&#x3D; vs equals() 比较问题</h3><p>java 中，equals()方法被认为是对对象的值进行深层次的比较，而“&#x3D;&#x3D;”是进行浅层次的比较：<br><strong>&#x3D;&#x3D;</strong></p>
+<ul>
+<li>当比较对象是值类型（如基本数据类型）时，对比的是数据的值，此时效果等同于 equals()；</li>
+<li>当比较对象是对象引用时，只要左右两边引用指向同一个地址，才为真，否则，即使两个对象的内容完全一样，也为假。</li>
+</ul>
+<p><strong>equals()</strong><br>equals() 比较两个对象的内容，相同返回真。<br>在 String 中，按照如下顺序工作（其他对象也类似）：</p>
+<ol>
+<li>比较引用，如果相同，返回 true；</li>
+<li>比较类型，如果类型不同，返回 false；</li>
+<li>比较长度，不等时，返回 false；</li>
+<li>逐字符比较两个字符串，遇到不同，返回 false；</li>
+<li>不满足 2-4，返回 true。</li>
+</ol>
+<p>要注意的是，equals()是在 Object 类中的，而 java 中“一切皆是对象”，所以，如果被比较的对象没有覆盖 Object 类中的 equals()的话，必然返回真，这与事实可能不符。而 String 等类型都已经重写了 equals() 方法。<br>另外，jls 规定了 equals()遵循的几个规则：</p>
+<ol>
+<li>自反性：对于任何非空引用值 x，x.equals(x) 都应返回 true。</li>
+<li>对称性：对于任何非空引用值 x 和 y，当且仅当 y.equals(x) 返回 true 时，x.equals(y) 才应返回 true。</li>
+<li>传递性：对于任何非空引用值 x、y 和 z，如果 x.equals(y) 返回 true，并且 y.equals(z) 返回 true，那么 x.equals(z) 应返回 true。</li>
+<li>一致性：对于任何非空引用值 x 和 y，多次调用 x.equals(y) 始终返回 true 或始终返回 false，前提是对象上 equals 比较中所用的信息没有被修改。</li>
+<li>对于任何非空引用值 x，x.equals(null) 都应返回 false。</li>
+</ol>
+<h3 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h3><p>字符串的分配，和其他的对象分配一样，耗费高昂的时间与空间代价。JVM 为了提高性能和减少内存开销，在实例化字符串常量的时候进行了一些优化。为了减少在 JVM 中创建的字符串的数量，字符串类维护了一个字符串池，每当代码创建字符串常量时，JVM 会首先检查字符串常量池。如果字符串已经存在池中，就返回池中的实例引用。如果字符串不在池中，就会实例化一个字符串并放到池中。Java 能够进行这样的优化是因为字符串是不可变的，可以不用担心数据冲突进行共享。这是 java 节约资源的一种方式。从 JVM 角度讲，它属于方法区的运行时常量池的一部分。<br>字符串常量总是指向字符串池中的一个对象，而通过 new 操作符创建的字符串对象不指向字符串池中的任何对象，但是可以通过使用字符串的 intern() 方法来指向其中的某一个。<br>有两种方式进入 String 常量池：</p>
+<ul>
+<li>编译期：通过双引号声明的常量（显示声明、静态编译优化后的常量等），JIT 优化也可能产生一些；</li>
+<li>运行期：调用 String 的 intern()方法，可能会将该 String 对象动态地写入。</li>
+</ul>
+<p>方式1 的行为是明确的，从 class 文件结构、类加载、编译期及运行期优化等过程都可以很明确地得知。而方式2 在不同 JDK 甚至有不同行为。</p>
+<h3 id="两种创建方式"><a href="#两种创建方式" class="headerlink" title="两种创建方式"></a>两种创建方式</h3><p>注意到以下代码结果：</p>
+<pre class="line-numbers language-java" data-language="java"><div class="caption"><span>Main.java</span></div><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> s1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">String</span> s3 <span class="token operator">=</span> <span class="token string">"123"</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s4 <span class="token operator">=</span> <span class="token string">"123"</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s1 <span class="token operator">==</span> s2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s3 <span class="token operator">==</span> s4<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span> output<span class="token operator">:</span> <span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span>
+<span class="token boolean">false</span>
+<span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>s1、s2 是 java 标准的对象创建方式，每调用一次就会在堆上创建一个新的对象，并指向它，同时创建一个相同内容的 String 对象存储在常量池中，如果常量池已存在则不重复创建（事实上 String 常量池只保存一份相同内容的String）；而 s3、s4 则是在栈中创建对象引用变量 str，然后查看 String 常量池中是否存在含有该内容的 String 对象，如果存在，则令 str 直接指向它，如果不存在，则先在池中创建该字符串，然后令 str 指向它。这样充分利用了栈的数据共享的优点。<br>故，s1 和 s2 分别指向不同的两个对象，s3 和 s4 指向的则是同一个地址。考虑到前述事实，如果用 equals() 比较 s1 和 s2 的话，将返回 true。</p>
+<p>注意到以下代码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> s1 <span class="token operator">=</span> <span class="token string">"123"</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s2 <span class="token operator">=</span> <span class="token string">"12"</span><span class="token punctuation">;</span>
+        <span class="token keyword">final</span> <span class="token class-name">String</span> s3 <span class="token operator">=</span> <span class="token string">"12"</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s4 <span class="token operator">=</span> <span class="token string">"3"</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">String</span> s5 <span class="token operator">=</span> <span class="token string">"12"</span> <span class="token operator">+</span> <span class="token string">"3"</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s6 <span class="token operator">=</span> s2 <span class="token operator">+</span> s4<span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s7 <span class="token operator">=</span> s3 <span class="token operator">+</span> s4<span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s8 <span class="token operator">=</span> s3 <span class="token operator">+</span> <span class="token string">"3"</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> s9 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"12"</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"3"</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s1 <span class="token operator">==</span> s5<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s1 <span class="token operator">==</span> s6<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s1 <span class="token operator">==</span> s7<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s1 <span class="token operator">==</span> s8<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s1 <span class="token operator">==</span> s9<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span> output<span class="token operator">:</span> <span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span>
+<span class="token boolean">true</span>
+<span class="token boolean">false</span>
+<span class="token boolean">false</span>
+<span class="token boolean">true</span>
+<span class="token boolean">false</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里引出以下问题：</p>
+<h3 id="字符串拼接方法"><a href="#字符串拼接方法" class="headerlink" title="字符串拼接方法"></a>字符串拼接方法</h3><p><strong>append()方法（StringBuilder&#x2F;StringBuffer）</strong><br>源码（手动添加注释）：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token class-name">AbstractStringBuilder</span> <span class="token function">append</span><span class="token punctuation">(</span><span class="token class-name">String</span> str<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>str <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token function">appendNull</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> len <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 追加后的字符数组长度是否超过当前值</span>
+    <span class="token function">ensureCapacityInternal</span><span class="token punctuation">(</span>count <span class="token operator">+</span> len<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 复制到目标数组</span>
+    str<span class="token punctuation">.</span><span class="token function">getChars</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> len<span class="token punctuation">,</span> value<span class="token punctuation">,</span> count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    count <span class="token operator">+=</span> len<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">private</span> <span class="token class-name">AbstractStringBuilder</span> <span class="token function">appendNull</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span> c <span class="token operator">=</span> count<span class="token punctuation">;</span>
+    <span class="token function">ensureCapacityInternal</span><span class="token punctuation">(</span>c <span class="token operator">+</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token keyword">char</span><span class="token punctuation">[</span><span class="token punctuation">]</span> value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+    value<span class="token punctuation">[</span>c<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token char">'n'</span><span class="token punctuation">;</span>
+    value<span class="token punctuation">[</span>c<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token char">'u'</span><span class="token punctuation">;</span>
+    value<span class="token punctuation">[</span>c<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token char">'l'</span><span class="token punctuation">;</span>
+    value<span class="token punctuation">[</span>c<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token char">'l'</span><span class="token punctuation">;</span>
+    count <span class="token operator">=</span> c<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">ensureCapacityInternal</span><span class="token punctuation">(</span><span class="token keyword">int</span> minimumCapacity<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// overflow-conscious code</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>minimumCapacity <span class="token operator">-</span> value<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 加长并拷贝</span>
+        value <span class="token operator">=</span> <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">copyOf</span><span class="token punctuation">(</span>value<span class="token punctuation">,</span> <span class="token function">newCapacity</span><span class="token punctuation">(</span>minimumCapacity<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看出，整个 append()方法是通过字符数组的加长、拷贝等处理完成的，没有生成中间对象，只有最后用 toString()返回一个 String 对象。速度最快。</p>
+<p><strong>concat()方法</strong><br>继续看源码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">concat</span><span class="token punctuation">(</span><span class="token class-name">String</span> str<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span> otherLen <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>otherLen <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 获取原字符串数组长度</span>
+    <span class="token keyword">int</span> len <span class="token operator">=</span> value<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token comment">// 将原字符串的字符数组拷贝到 buf 数组</span>
+    <span class="token keyword">char</span> buf<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">copyOf</span><span class="token punctuation">(</span>value<span class="token punctuation">,</span> len <span class="token operator">+</span> otherLen<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 追加的字符串转化为字符数组，添加到 buf 中</span>
+    str<span class="token punctuation">.</span><span class="token function">getChars</span><span class="token punctuation">(</span>buf<span class="token punctuation">,</span> len<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 产生一个新的对象</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span>buf<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>整体是一个数组的拷贝，在内存中是原子操作，速度也很快，但最后返回语句会新建一个对象，这对速度有一定影响。</p>
+<p>** “+” **<br>虽然编译器对“+”做了优化，会使用 StringBuilder 的 append()方法进行追加，但它最终会通过 toString()方法转换成 String 字符串，速度比较慢。其过程为：</p>
+<ol>
+<li>创建 StringBuilder 对象；</li>
+<li>执行完毕调用 toString() 方法。</li>
+</ol>
+<p>具体情况分为：<br>如果加号两边都是字面量（或等效于字面量），形如<br>String str &#x3D; “abc” + “123”;<br>此时的处理方式是直接将 str 作为一个对象处理，相当于先处理右边的加号，再进行创建，参考上面的“&#x3D;”创建规则：<br>String str &#x3D; “abc123”;<br>否则，形如：<br>String str &#x3D; “abc”;<br>str +&#x3D; “123”;<br>此时执行情况则明显不同，相当于将 str 内容取出，再与第二个字符串进拼接，返回新生成的字符串，注意这里有新建动作，所以创建规则相当于使用“new”：<br>String str &#x3D; new StringBuilder(str).append(“123”).toString();<br>即，执行完毕会有 3 个对象存在。<br><strong>而 final 相当于宏，编译器在编译期会把所有用 final 定义的变量直接用定义值替换掉（宏替换）</strong>。<br><em>这就解释了以上代码的结果。</em></p>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li>大多数情况，使用“+”，它符合编码习惯以及可读性较好；</li>
+<li>当频繁进行字符串的运算（拼接、替换、删除等）时，或在系统性能临界的时候，应考虑使用 append() 和 concat()。</li>
+</ul>
+<h3 id="String、StringBuffer、StringBuilder"><a href="#String、StringBuffer、StringBuilder" class="headerlink" title="String、StringBuffer、StringBuilder"></a>String、StringBuffer、StringBuilder</h3><p>简单讲，<br>**<br>String：字符串常量（String 为 final 修饰类）；<br>StringBuffer：字符串变量，线程安全。<br>StringBuilder：字符串变量，非线程安全；<br>**</p>
+<p><strong>StringBuffer（Since JDK1.0）</strong><br>线程安全的可变字符序列，在任意时间点上它都包含某种特定的字符序列，但通过某些方法调用（如 append()、insert()等）可以改变序列的内容和长度。可将该字符串缓冲区安全地用于多个线程。观察源码可见，为提供线程安全，其内部实现中大部分方法都是 synchronized 修饰的。</p>
+<p><strong>StringBuilder（Since JDK5.0）</strong><br>可变字符序列。提供与 StringBuffer 兼容的 API，不过不保证同步，被设计用作 StringBuffer 的一个简易替换，用在字符串缓冲区被单个线程使用的场景（很普遍），大多数情况下，它提供更快的执行效率。</p>
+<p><strong>在频繁对字符串内容进行修改的场景，根据对线程安全性的需求，优先考虑 StringBuilder、StringBuffer 中的一种。</strong></p>
+<h3 id="关于-String-的-intern-方法"><a href="#关于-String-的-intern-方法" class="headerlink" title="关于 String 的 intern()方法"></a>关于 String 的 intern()方法</h3><p>上面提到，inter()方法可能导致将 String 对象写入 String 常量池。从 JDK 7 开始，常量池 从 PermGen 区移到了 java 堆（jvms 角度讲，应该是从 方法区 移到了 java 堆，PermGen 是 HotSpot 里的概念），语义上的变化为：</p>
+<ul>
+<li>调用 intern()方法时，如果堆中有该字符串而常量池中没有，则直接在常量池中保存堆中对象的引用，而不是在常量池中新建对象。</li>
+</ul>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            Neil
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="https://lazy-snail.github.io/2018/04/26/java/String/">
+            https://lazy-snail.github.io/2018/04/26/java/String/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2018/04/27/java/java-%E8%AF%AD%E6%B3%95%E7%B3%96/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">Java-语法糖 </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/04/26/java/java-%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">Java-自动装箱与拆箱 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#x3D-x3D-vs-equals-%E6%AF%94%E8%BE%83%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">&#x3D;&#x3D; vs equals() 比较问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-number">2.</span> <span class="toc-text">字符串常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">两种创建方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">字符串拼接方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String%E3%80%81StringBuffer%E3%80%81StringBuilder"><span class="toc-number">5.</span> <span class="toc-text">String、StringBuffer、StringBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-String-%E7%9A%84-intern-%E6%96%B9%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">关于 String 的 intern()方法</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="/img/little-prince.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">Neil</p>
+<p class="author-description">there's a will there's a way</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>171</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>13</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>31</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#x3D-x3D-vs-equals-%E6%AF%94%E8%BE%83%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">&#x3D;&#x3D; vs equals() 比较问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-number">2.</span> <span class="toc-text">字符串常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">两种创建方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">字符串拼接方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String%E3%80%81StringBuffer%E3%80%81StringBuilder"><span class="toc-number">5.</span> <span class="toc-text">String、StringBuffer、StringBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-String-%E7%9A%84-intern-%E6%96%B9%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">关于 String 的 intern()方法</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/Algs/">
+        <div class="categories-list-item">
+          Algs
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/algs/">
+        <div class="categories-list-item">
+          algs
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CS/">
+        <div class="categories-list-item">
+          CS
+          <span class="categories-list-item-badge">9</span>
+        </div>
+      </a>
+    
+      <a href="/categories/CN/">
+        <div class="categories-list-item">
+          CN
+          <span class="categories-list-item-badge">10</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">62</span>
+        </div>
+      </a>
+    
+      <a href="/categories/backend/">
+        <div class="categories-list-item">
+          backend
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/middleware/">
+        <div class="categories-list-item">
+          middleware
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/tools/">
+        <div class="categories-list-item">
+          tools
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/DB/">
+        <div class="categories-list-item">
+          DB
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/OS/">
+        <div class="categories-list-item">
+          OS
+          <span class="categories-list-item-badge">14</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cpp/">
+        <div class="categories-list-item">
+          cpp
+          <span class="categories-list-item-badge">20</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Daily/">
+        <div class="categories-list-item">
+          Daily
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/py/">
+        <div class="categories-list-item">
+          py
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/java/" 
+        title="java">
+        <div class="tags-list-item">java</div>
+      </a>
+    
+      <a 
+        href="/tags/cpp/" 
+        title="cpp">
+        <div class="tags-list-item">cpp</div>
+      </a>
+    
+      <a 
+        href="/tags/OS/" 
+        title="OS">
+        <div class="tags-list-item">OS</div>
+      </a>
+    
+      <a 
+        href="/tags/DB/" 
+        title="DB">
+        <div class="tags-list-item">DB</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%AE%B9%E5%99%A8/" 
+        title="容器">
+        <div class="tags-list-item">容器</div>
+      </a>
+    
+      <a 
+        href="/tags/MySQL/" 
+        title="MySQL">
+        <div class="tags-list-item">MySQL</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%B9%B6%E5%8F%91/" 
+        title="并发">
+        <div class="tags-list-item">并发</div>
+      </a>
+    
+      <a 
+        href="/tags/JVM/" 
+        title="JVM">
+        <div class="tags-list-item">JVM</div>
+      </a>
+    
+      <a 
+        href="/tags/CN/" 
+        title="CN">
+        <div class="tags-list-item">CN</div>
+      </a>
+    
+      <a 
+        href="/tags/Algs/" 
+        title="Algs">
+        <div class="tags-list-item">Algs</div>
+      </a>
+    
+      <a 
+        href="/tags/CS/" 
+        title="CS">
+        <div class="tags-list-item">CS</div>
+      </a>
+    
+      <a 
+        href="/tags/Q-A/" 
+        title="Q&A">
+        <div class="tags-list-item">Q&amp;A</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%96%B0%E7%89%B9%E6%80%A7/" 
+        title="新特性">
+        <div class="tags-list-item">新特性</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BA%BF%E7%A8%8B/" 
+        title="线程">
+        <div class="tags-list-item">线程</div>
+      </a>
+    
+      <a 
+        href="/tags/Sort/" 
+        title="Sort">
+        <div class="tags-list-item">Sort</div>
+      </a>
+    
+      <a 
+        href="/tags/Linux/" 
+        title="Linux">
+        <div class="tags-list-item">Linux</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#x3D-x3D-vs-equals-%E6%AF%94%E8%BE%83%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">&#x3D;&#x3D; vs equals() 比较问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-number">2.</span> <span class="toc-text">字符串常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">两种创建方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">字符串拼接方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String%E3%80%81StringBuffer%E3%80%81StringBuilder"><span class="toc-number">5.</span> <span class="toc-text">String、StringBuffer、StringBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-String-%E7%9A%84-intern-%E6%96%B9%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">关于 String 的 intern()方法</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/AOP/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringBoot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/%E6%B3%A8%E8%A7%A3-Transactional/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-06-28</div>
+        <a href="/2022/06/28/java/SpringMVC%20%E6%8B%A6%E6%88%AA%E5%99%A8/"><div class="recent-posts-item-content"></div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2017 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          懒蜗牛
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        
+        
+      </div>
+      
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+      
+
+  
+  
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    
+<script src="//cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-svg.js"></script>
+
+  
+ 
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+    
+      <script> 
+        loadScript('/js/lib/busuanzi.min.js') 
+      </script>
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+      <script>
+        setTimeout(() => {localSearch("search.json")}, 0)
+      </script>
+    
+  </body>
+</html>
