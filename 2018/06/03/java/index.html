@@ -343,8 +343,7 @@
   <div 
     id="section" 
     class="post-content">
-    <p>[toc]</p>
-<h1 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h1><p><strong>各种不同平台的 VM 与所有平台统一使用的程序存储格式——字节码（ByteCode）是构成平台无关性的基石。</strong><br>然而，VM 的目标显然不止于平台无关，其语言无关性也同样在发展：目前已经有 Groovy、Jython、JRuby、Scala 等语言同样能够运行在 JVM 上。而实现语言无关性的基础仍然是 VM 和字节码存储格式。JVM 不和包括 java 在内的任何语言绑定，它只和“class 文件”这种特定格式的二进制文件格式所关联，其中包含了 JVM 指令集和符号表以及若干其他辅助信息。任何其他语言同样可以使用合适的编译器将其代码编译为 class 文件从而在 JVM 上执行，JVM 本身不关心 class 文件来源于何种语言——只要该 class 文件符合 jvms 的语法和结构化约束即可。<br>字节码所能提供的语义描述能力强于 java 语言。</p>
+    <h1 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h1><p><strong>各种不同平台的 VM 与所有平台统一使用的程序存储格式——字节码（ByteCode）是构成平台无关性的基石。</strong><br>然而，VM 的目标显然不止于平台无关，其语言无关性也同样在发展：目前已经有 Groovy、Jython、JRuby、Scala 等语言同样能够运行在 JVM 上。而实现语言无关性的基础仍然是 VM 和字节码存储格式。JVM 不和包括 java 在内的任何语言绑定，它只和“class 文件”这种特定格式的二进制文件格式所关联，其中包含了 JVM 指令集和符号表以及若干其他辅助信息。任何其他语言同样可以使用合适的编译器将其代码编译为 class 文件从而在 JVM 上执行，JVM 本身不关心 class 文件来源于何种语言——只要该 class 文件符合 jvms 的语法和结构化约束即可。<br>字节码所能提供的语义描述能力强于 java 语言。</p>
 <p><strong>class 类文件的结构&#x2F;字节码</strong><br><img src="/2018/06/03/java/class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84.png" alt="class文件结构" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/java/class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84.png" class="lozad post-image"><br>以 8-byte 为单位紧凑排列，大端字节序方式，不含任何分隔符，格式是严格定义的：数据项顺序、数量，字节序，哪个字节代表什么含义等等，都不允许改变。<br>文件格式采用类似于 C 语言结构体的伪结构，只含有两种数据类型：<strong>无符号数和表</strong>。</p>
 <ul>
 <li>无符号数：基本数据类型，以 u1、u2、u4、u8 表示 1&#x2F;2&#x2F;4&#x2F;8 个字节的无符号数。可以用来描述数字、索引引用、数量值或按照 UTF-8 编码构成字符串值；</li>

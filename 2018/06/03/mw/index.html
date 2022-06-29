@@ -343,8 +343,7 @@
   <div 
     id="section" 
     class="post-content">
-    <p>[toc]</p>
-<h1 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h1><p><strong>re</strong>mote <strong>di</strong>ctionary <strong>s</strong>erver, redis, 是一个开源的内存中的数据结构存储系统，它可以用作：<strong>数据库、缓存和消息中间件</strong>。采用 <strong>单进程单线程</strong> 方式运行。<br>Redis 支持多种类型的数据结构，如字符串（Strings），散列（Hash），列表（List），集合（Set），有序集合（Sorted Set或者是ZSet）与范围查询，Bitmaps，Hyperloglogs 和地理空间（Geospatial）索引半径查询。其中常见的数据结构类型有：String、List、Set、Hash、ZSet这5种。<br><a target="_blank" rel="noopener" href="https://www.runoob.com/mw/redis-intro.html">redis 教程</a></p>
+    <h1 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h1><p><strong>re</strong>mote <strong>di</strong>ctionary <strong>s</strong>erver, redis, 是一个开源的内存中的数据结构存储系统，它可以用作：<strong>数据库、缓存和消息中间件</strong>。采用 <strong>单进程单线程</strong> 方式运行。<br>Redis 支持多种类型的数据结构，如字符串（Strings），散列（Hash），列表（List），集合（Set），有序集合（Sorted Set或者是ZSet）与范围查询，Bitmaps，Hyperloglogs 和地理空间（Geospatial）索引半径查询。其中常见的数据结构类型有：String、List、Set、Hash、ZSet这5种。<br><a target="_blank" rel="noopener" href="https://www.runoob.com/mw/redis-intro.html">redis 教程</a></p>
 <h2 id="查询速度"><a href="#查询速度" class="headerlink" title="查询速度"></a>查询速度</h2><p>Redis 采用基于内存的、单进程单线程模型的 KV 数据库，由 C 语言编写。官方提供的数据是可以达到 100000+ 的 QPS（每秒内查询次数）。</p>
 <h2 id="高效查询的原因"><a href="#高效查询的原因" class="headerlink" title="高效查询的原因"></a>高效查询的原因</h2><ul>
 <li>纯内存操作，绝大部分请求是纯粹的内存操作，非常快速。数据存在内存中，类似于 HashMap，HashMap 的优势就是查找和操作的时间复杂度都是O(1)；</li>

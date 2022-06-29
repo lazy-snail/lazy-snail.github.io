@@ -343,8 +343,7 @@
   <div 
     id="section" 
     class="post-content">
-    <p>[toc]</p>
-<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><h1 id="SpringBoot启动过程"><a href="#SpringBoot启动过程" class="headerlink" title="SpringBoot启动过程"></a>SpringBoot启动过程</h1><h1 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h1><p>以典型的web应用为例，一个请求从接收到返回的处理过程相当复杂，如下图所示，主要经过DispatcherServlet、HandlerMapping、Controller、ViewResolver、Model等：<br><img src="/2018/06/03/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="request handle" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" class="lozad post-image"></p>
+    <h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><h1 id="SpringBoot启动过程"><a href="#SpringBoot启动过程" class="headerlink" title="SpringBoot启动过程"></a>SpringBoot启动过程</h1><h1 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h1><p>以典型的web应用为例，一个请求从接收到返回的处理过程相当复杂，如下图所示，主要经过DispatcherServlet、HandlerMapping、Controller、ViewResolver、Model等：<br><img src="/2018/06/03/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="request handle" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" class="lozad post-image"></p>
 <ol>
 <li>客户端请求提交到DispatcherServlet；</li>
 <li>由DisPatcherServlet控制器寻找一个或多个HandlerMapping，找到处理请求的Controller；</li>
