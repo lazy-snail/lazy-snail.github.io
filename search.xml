@@ -29,31 +29,6 @@
     
     
     <entry>
-      <title>computer network</title>
-      <link href="//cs/cn/"/>
-      <url>//cs/cn/</url>
-      
-        <content type="html"><![CDATA[<h1 id="层次网络模型"><a href="#层次网络模型" class="headerlink" title="层次网络模型"></a>层次网络模型</h1><p>OSI(Open System Interconnect，开放式系统互联) 7 层模型：<br><img src="/cs/cn/OSI-7%E5%B1%82%E6%A8%A1%E5%9E%8B.gif" alt="OSI-7层模型" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/cn/OSI-7%E5%B1%82%E6%A8%A1%E5%9E%8B.gif" class="lozad post-image"></p><p><img src="/cs/cn/%E5%85%B6%E4%BB%96%E5%B1%82%E6%AC%A1%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.png" alt="层次网络模型" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/cn/%E5%85%B6%E4%BB%96%E5%B1%82%E6%AC%A1%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.png" class="lozad post-image"></p><p>重要的内容集中在应用层（HTTP、FTP、SMTP、远程登陆协议（TELNET、Rlogin），运输层（TCP、UDP），网络层（IP、ICMP、IGMP、RIP）。</p><h1 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h1><h2 id="应用层协议"><a href="#应用层协议" class="headerlink" title="应用层协议"></a>应用层协议</h2><h2 id="HTTP-HTTPs"><a href="#HTTP-HTTPs" class="headerlink" title="HTTP HTTPs"></a>HTTP HTTPs</h2><h1 id="拥控算法"><a href="#拥控算法" class="headerlink" title="拥控算法"></a>拥控算法</h1><h1 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h1>]]></content>
-      
-      
-      <categories>
-          
-          <category> cn </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> cn </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>OS</title>
       <link href="//cs/os/"/>
       <url>//cs/os/</url>
@@ -146,6 +121,31 @@
         <tags>
             
             <tag> algs </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>computer network</title>
+      <link href="//cs/cn/"/>
+      <url>//cs/cn/</url>
+      
+        <content type="html"><![CDATA[<h1 id="层次网络模型"><a href="#层次网络模型" class="headerlink" title="层次网络模型"></a>层次网络模型</h1><p>OSI(Open System Interconnect，开放式系统互联) 7 层模型：<br><img src="/cs/cn/OSI-7%E5%B1%82%E6%A8%A1%E5%9E%8B.gif" alt="OSI-7层模型" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/cn/OSI-7%E5%B1%82%E6%A8%A1%E5%9E%8B.gif" class="lozad post-image"></p><p><img src="/cs/cn/%E5%85%B6%E4%BB%96%E5%B1%82%E6%AC%A1%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.png" alt="层次网络模型" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/cn/%E5%85%B6%E4%BB%96%E5%B1%82%E6%AC%A1%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.png" class="lozad post-image"></p><p>重要的内容集中在应用层（HTTP、FTP、SMTP、远程登陆协议（TELNET、Rlogin），运输层（TCP、UDP），网络层（IP、ICMP、IGMP、RIP）。</p><h1 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h1><h2 id="应用层协议"><a href="#应用层协议" class="headerlink" title="应用层协议"></a>应用层协议</h2><h2 id="HTTP-HTTPs"><a href="#HTTP-HTTPs" class="headerlink" title="HTTP HTTPs"></a>HTTP HTTPs</h2><h1 id="拥控算法"><a href="#拥控算法" class="headerlink" title="拥控算法"></a>拥控算法</h1><h1 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h1>]]></content>
+      
+      
+      <categories>
+          
+          <category> cn </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cn </tag>
             
         </tags>
       
