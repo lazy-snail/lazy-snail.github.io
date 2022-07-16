@@ -28,7 +28,7 @@
     
       <meta 
         property="og:url" 
-        content="https://lazy-snail.github.io/2018/06/03/mw/index.html">
+        content="https://lazy-snail.github.io/cs/mw/index.html">
     
     
       <meta 
@@ -363,21 +363,21 @@
 <li>原子操作：Redis 的所有操作都是原子性的，同时还支持对几个操作全并后的原子性执行；</li>
 <li>丰富的特性：支持 publish&#x2F;subscribe、通知 key 过期等特性。</li>
 </ul>
-<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><img src="/2018/06/03/mw/06/03/mw/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B.JPG" class title="5种数据结构类型" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/mw/06/03/mw/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B.JPG" class="lozad post-image">
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><img src="/cs/mw/mw/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B.JPG" class title="5种数据结构类型" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/mw/mw/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B.JPG" class="lozad post-image">
 
 <h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>类似于其他编程语言中字符串的概念。<br>redis 中的 string 类型是二进制安全的，i.e. 可以包含任何数据，比如一张 .jpg 格式的图片。一个键最大存储量为 512 MB。</p>
-<img src="/2018/06/03/mw/06/03/mw/string.JPG" class title="字符串" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/mw/06/03/mw/string.JPG" class="lozad post-image">
+<img src="/cs/mw/mw/string.JPG" class title="字符串" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/mw/mw/string.JPG" class="lozad post-image">
 
 <h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>按照插入顺序有序存储多个字符串，相同元素可重复，双向操作（LPHSH、LPOP、RPUSH、RPOP）。<br>每个 list 最多存储元素数量：2^32 - 1。</p>
-<img src="/2018/06/03/mw/06/03/mw/list.JPG" class title="列表" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/mw/06/03/mw/list.JPG" class="lozad post-image">
+<img src="/cs/mw/mw/list.JPG" class title="列表" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/mw/mw/list.JPG" class="lozad post-image">
 
 <h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>集合和列表都可以存储多个字符串，不同之处在于：列表可以存储多个相同的字符串，集合通过 <strong>散列表来保证存储的每个字符串都是不相同的</strong>。<br>redis 的集合使用无序（unordered）方式存储元素，不支持像列表一样将元素从某一端 push&#x2F;pop 的操作，相应地，使用 SADD&#x2F;SREM 添加&#x2F;移除元素。由于是通过哈希表实现的，所以添加&#x2F;移除&#x2F;查找的时间复杂度为 O(1)。<br>每个 set 最多存储元素数量：2^32 - 1。</p>
-<img src="/2018/06/03/mw/06/03/mw/set.JPG" class title="集合" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/mw/06/03/mw/set.JPG" class="lozad post-image">
+<img src="/cs/mw/mw/set.JPG" class title="集合" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/mw/mw/set.JPG" class="lozad post-image">
 
 <h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>可以存储多个键值对之间的映射。<strong>官方推荐：尽可能使用hash存储数据。</strong><br>每个 hash 最多存储键值对数量：2^32 - 1。</p>
-<img src="/2018/06/03/mw/06/03/mw/hash.JPG" class title="散列" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/mw/06/03/mw/hash.JPG" class="lozad post-image">
+<img src="/cs/mw/mw/hash.JPG" class title="散列" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/mw/mw/hash.JPG" class="lozad post-image">
 
-<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><p>有序集合（zset）和散列一样，都用于存储键值对，不支持重复元素。不同之处在于：有序集合的键被称为成员（member），每个成员都是各不相同的；值被称为分值（score），必须为浮点数（分值可重复）。zset 既可以根据成员访问元素（和散列一样），又可以根据分值以及分值的排列顺序来访问元素的结构。<br>每个 zset 最多存储键值对数量：2^32 - 1。<br><img src="/2018/06/03/mw/zset.JPG" alt="有序集合" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/mw/zset.JPG" class="lozad post-image"></p>
+<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><p>有序集合（zset）和散列一样，都用于存储键值对，不支持重复元素。不同之处在于：有序集合的键被称为成员（member），每个成员都是各不相同的；值被称为分值（score），必须为浮点数（分值可重复）。zset 既可以根据成员访问元素（和散列一样），又可以根据分值以及分值的排列顺序来访问元素的结构。<br>每个 zset 最多存储键值对数量：2^32 - 1。<br><img src="/cs/mw/zset.JPG" alt="有序集合" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/mw/zset.JPG" class="lozad post-image"></p>
 <h2 id="use-case"><a href="#use-case" class="headerlink" title="use case"></a>use case</h2><h3 id="作为分布式锁"><a href="#作为分布式锁" class="headerlink" title="作为分布式锁"></a>作为分布式锁</h3><p>分布式锁至少要满足三个属性要求：  </p>
 <ul>
 <li>安全方面（Safety property）：互斥。在任一时刻，只有一个client可以获取锁；</li>
@@ -421,8 +421,8 @@
           <span style="font-weight: bold;">文章链接：</span><a 
             target="_blank" 
             rel="nofollow noopener noreferrer" 
-            href="https://lazy-snail.github.io/2018/06/03/mw/">
-            https://lazy-snail.github.io/2018/06/03/mw/
+            href="https://lazy-snail.github.io/cs/mw/">
+            https://lazy-snail.github.io/cs/mw/
           </a>
         </p>
         <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
@@ -434,32 +434,18 @@
   
     <div class="nav-item-prev">
       <a 
-        href="/2018/06/03/java/" 
+        href="/cs/spring/" 
         class="nav-link">
         <i class="iconfont icon-left nav-prev-icon"></i>
         <div>
           <div class="nav-label">Prev</div>
           
-            <div class="nav-title">java </div>
+            <div class="nav-title">Spring </div>
           
         </div>
       </a>
     </div>
   
-  
-    <div class="nav-item-next">
-      <a 
-        href="/2018/06/03/os/" 
-        class="nav-link">
-        <div>
-          <div class="nav-label">Next</div>
-          
-            <div class="nav-title">os </div>
-          
-        </div>
-        <i class="iconfont icon-right nav-next-icon"></i>
-      </a>
-    </div>
   
 </div>
 
@@ -491,19 +477,19 @@
   <a 
     class="author-posts-count" 
     href="/archives">
-    <span>8</span>
+    <span>9</span>
     <span>Posts</span>
   </a>
   <a 
     class="author-categories-count" 
     href="/categories">
-    <span>6</span>
+    <span>8</span>
     <span>Categories</span>
   </a>
   <a 
     class="author-tags-count" 
     href="/tags">
-    <span>6</span>
+    <span>8</span>
     <span>Tags</span>
   </a>
 </div>
@@ -535,16 +521,16 @@
   </div>
   <div class="categories-list">
     
-      <a href="/categories/algs/">
+      <a href="/categories/cn/">
         <div class="categories-list-item">
-          algs
+          cn
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
     
-      <a href="/categories/cn/">
+      <a href="/categories/algs/">
         <div class="categories-list-item">
-          cn
+          algs
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
@@ -553,13 +539,6 @@
         <div class="categories-list-item">
           db
           <span class="categories-list-item-badge">1</span>
-        </div>
-      </a>
-    
-      <a href="/categories/java/">
-        <div class="categories-list-item">
-          java
-          <span class="categories-list-item-badge">2</span>
         </div>
       </a>
     
@@ -573,6 +552,27 @@
       <a href="/categories/os/">
         <div class="categories-list-item">
           os
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/aqad/">
+        <div class="categories-list-item">
+          aqad
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cs/">
+        <div class="categories-list-item">
+          cs
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
@@ -598,6 +598,18 @@
       </a>
     
       <a 
+        href="/tags/cs/" 
+        title="cs">
+        <div class="tags-list-item">cs</div>
+      </a>
+    
+      <a 
+        href="/tags/aqad/" 
+        title="aqad">
+        <div class="tags-list-item">aqad</div>
+      </a>
+    
+      <a 
         href="/tags/os/" 
         title="os">
         <div class="tags-list-item">os</div>
@@ -616,15 +628,15 @@
       </a>
     
       <a 
-        href="/tags/cn/" 
-        title="cn">
-        <div class="tags-list-item">cn</div>
-      </a>
-    
-      <a 
         href="/tags/algs/" 
         title="algs">
         <div class="tags-list-item">algs</div>
+      </a>
+    
+      <a 
+        href="/tags/cn/" 
+        title="cn">
+        <div class="tags-list-item">cn</div>
       </a>
     
   </div>
@@ -660,23 +672,23 @@
   <div class="recent-posts-list">
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/cn/"><div class="recent-posts-item-content">cn</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/db/"><div class="recent-posts-item-content">database</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/cs/"><div class="recent-posts-item-content">cs</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/os/"><div class="recent-posts-item-content">OS</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/db/"><div class="recent-posts-item-content">db</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/java/"><div class="recent-posts-item-content">java</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/java/"><div class="recent-posts-item-content">java</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/aqad/"><div class="recent-posts-item-content">a question a day</div></a>
       </div>
     
   </div>

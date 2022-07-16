@@ -18,17 +18,17 @@
   <link 
     rel="icon" 
     href="/img/little-prince.png">
-  <title>spring</title>
+  <title>Spring</title>
   
     
       <meta 
         property="og:title" 
-        content="spring">
+        content="Spring">
     
     
       <meta 
         property="og:url" 
-        content="https://lazy-snail.github.io/2018/06/03/spring/index.html">
+        content="https://lazy-snail.github.io/cs/spring/index.html">
     
     
       <meta 
@@ -42,10 +42,10 @@
         content="article">
       <meta 
         property="og:article:published_time" 
-        content="2018-06-03">
+        content="2022-07-17">
       <meta 
         property="og:article:modified_time" 
-        content="2022-07-16">
+        content="2022-07-17">
       <meta 
         property="og:article:author" 
         content="Neil">
@@ -293,16 +293,16 @@
 <article class="card card-content">
   <header>
     <h1 class="post-title">
-      spring
+      Spring
     </h1>
   </header>
   <div class="post-meta post-show-meta">
-    <time datetime="2018-06-03T07:15:38.000Z">
+    <time datetime="2022-07-16T17:50:59.664Z">
       <i 
         class="iconfont icon-calendar" 
         style="margin-right: 2px;">
       </i>
-      <span>2018-06-03</span>
+      <span>2022-07-17</span>
     </time>
     
       <span class="dot"></span>
@@ -343,16 +343,16 @@
   <div 
     id="section" 
     class="post-content">
-    <h1 id="核心模块"><a href="#核心模块" class="headerlink" title="核心模块"></a>核心模块</h1><p>包括Bean、Context、Core。<br><img src="/2018/06/03/spring/overview.png" alt="overview" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/overview.png" class="lozad post-image"></p>
+    <h1 id="核心模块"><a href="#核心模块" class="headerlink" title="核心模块"></a>核心模块</h1><p>包括Bean、Context、Core。<br><img src="/cs/spring/overview.png" alt="overview" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/overview.png" class="lozad post-image"></p>
 <h2 id="bean"><a href="#bean" class="headerlink" title="bean"></a>bean</h2><p>spring的核心思想常常被称作BOP(Bean Oriented Programming)，面向Bean编程。Bean模块解决以下问题：</p>
 <ol>
 <li>bean的定义；</li>
 <li>bean的创建；</li>
 <li>bean的解析；</li>
 </ol>
-<p>作为业务开发通常只需要关心bean的创建，其他两个过程由spring内部完成。<br>Bean的整体架构是典型的工厂模式，最上层的接口是BeanFactory。ListableBeanFactory、HierarchicalBeanFactory和AutowireCapableBean是其子类，目的是为了区分Spring内部对象处理和转化的数据限制：<br>ListableBeanFactory: 表示这些Bean是可列表的，定义bean的集合；<br>HierarchicalBeanFactory: 表示这些Bean有继承关系，定义bean的关系；<br>AutowireCapableBeanFactory: 定义Bean的自动装配规则，定义bean的行为；<br><img src="/2018/06/03/spring/BeanFactory-hierarchy.png" alt="BeanFactory-hierarchy" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/BeanFactory-hierarchy.png" class="lozad post-image"></p>
-<p>bean定义，主要由BeanDefinition描述，成功解析后都会被转化为BeanDefinition对象，之后所有的操作都会在BeanDefinition对象之上进行。层次关系如下：<br><img src="/2018/06/03/spring/BeanDefinition-hierarchy.png" alt="BeanDefinition-hierarchy" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/BeanDefinition-hierarchy.png" class="lozad post-image"></p>
-<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2><p>Bean包装的是一个个Object，Object中存储着业务所需的数据。那么，如何给这些数据以及它们之间的关系提供生存、运行环境——即保存对象的状态，就是Context要解决的问题。Context就是bean关系的集合，即IoC容器。<br>ApplicationContext是Context最上层的接口，层次关系如下：<br><img src="/2018/06/03/spring/ApplicationContext-hierarchy.png" alt="ApplicationContext-hierarchy" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/ApplicationContext-hierarchy.png" class="lozad post-image"><br>ApplicationContext能够标识一个应用环境的基本信息，继承了5个接口，用于拓展Context的功能，其中BeanFactory用于创建Bean，同时继承了ResourceLoader接口，用于访问任何外部资源。<br>子类主要包括：</p>
+<p>作为业务开发通常只需要关心bean的创建，其他两个过程由spring内部完成。<br>Bean的整体架构是典型的工厂模式，最上层的接口是BeanFactory。ListableBeanFactory、HierarchicalBeanFactory和AutowireCapableBean是其子类，目的是为了区分Spring内部对象处理和转化的数据限制：<br>ListableBeanFactory: 表示这些Bean是可列表的，定义bean的集合；<br>HierarchicalBeanFactory: 表示这些Bean有继承关系，定义bean的关系；<br>AutowireCapableBeanFactory: 定义Bean的自动装配规则，定义bean的行为；<br><img src="/cs/spring/BeanFactory-hierarchy.png" alt="BeanFactory-hierarchy" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/BeanFactory-hierarchy.png" class="lozad post-image"></p>
+<p>bean定义，主要由BeanDefinition描述，成功解析后都会被转化为BeanDefinition对象，之后所有的操作都会在BeanDefinition对象之上进行。层次关系如下：<br><img src="/cs/spring/BeanDefinition-hierarchy.png" alt="BeanDefinition-hierarchy" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/BeanDefinition-hierarchy.png" class="lozad post-image"></p>
+<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2><p>Bean包装的是一个个Object，Object中存储着业务所需的数据。那么，如何给这些数据以及它们之间的关系提供生存、运行环境——即保存对象的状态，就是Context要解决的问题。Context就是bean关系的集合，即IoC容器。<br>ApplicationContext是Context最上层的接口，层次关系如下：<br><img src="/cs/spring/ApplicationContext-hierarchy.png" alt="ApplicationContext-hierarchy" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/ApplicationContext-hierarchy.png" class="lozad post-image"><br>ApplicationContext能够标识一个应用环境的基本信息，继承了5个接口，用于拓展Context的功能，其中BeanFactory用于创建Bean，同时继承了ResourceLoader接口，用于访问任何外部资源。<br>子类主要包括：</p>
 <ul>
 <li>ConfigurableApplicationContext: 可动态配置和修改信息的Context，其下AbstractRefreshableApplicationContext最为常用。</li>
 <li>WebApplicationContext: 为Web应用准备的Context，可以直接访问ServletContext。</li>
@@ -370,7 +370,7 @@
 <li>资源包装。Resource向上继承了InputStreamSource接口，所有的资源都通过InputStream来获取，从而屏蔽了资源提供者；</li>
 <li>资源加载。Resource下的ResourceLoader接口，所有资源加载者统一实现该接口就能加载所有的资源，例如之前的ApplicationContext。</li>
 </ul>
-<p>与Context建立关系：ApplicationContext通过ResourcePatternResolver接口与ResourceLoader进行交互，来进行资源的加载、解析和描述。ResourcePatternResolver将资源封装整合，便于其他模块使用。<br><img src="/2018/06/03/spring/ResourceLoader-ApplicationContext.png" alt="ResourceLoader-ApplicationContext" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/ResourceLoader-ApplicationContext.png" class="lozad post-image"></p>
+<p>与Context建立关系：ApplicationContext通过ResourcePatternResolver接口与ResourceLoader进行交互，来进行资源的加载、解析和描述。ResourcePatternResolver将资源封装整合，便于其他模块使用。<br><img src="/cs/spring/ResourceLoader-ApplicationContext.png" alt="ResourceLoader-ApplicationContext" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/ResourceLoader-ApplicationContext.png" class="lozad post-image"></p>
 <h1 id="IoC-容器结构"><a href="#IoC-容器结构" class="headerlink" title="IoC 容器结构"></a>IoC 容器结构</h1><p>Spring IoC容器用于创建并管理Spring Bean对象以及Bean属性注入。通过ResourceLoader&#x2F;Resolver读取Bean的配置文件并转换成统一资源对象（Resource），然后通过BeanDefinitionReader转换成pring内部对Bean的描述对象（BeanDefinition），然后将其注册（BeanRegister）到容器中（BeanFactory），供以后转换成Bean对象使用。spring项目源代码很好地把它们划分到了不同的模块中，即上面的三个模块。而从资源读取、描述对象转换、注册使用这些阶段，从源码中又可以抽出以下6个组件：</p>
 <ul>
 <li>资源组件：Resource，对资源文件的描述，不同资源文件如xml、properties文件等，格式不同，最终都将被ResourceLoader加载获得相应的Resource对象；</li>
@@ -380,13 +380,13 @@
 <li>Bean描述组件：BeanDefinition体系，Spring内部对Bean描述的基本数据结构；</li>
 <li>Bean构造组件：BeanDefinitionReader体系，读取Resource并将其数据转换成一个个BeanDefinition对象。</li>
 </ul>
-<h2 id="Resource"><a href="#Resource" class="headerlink" title="Resource"></a>Resource</h2><p>如各类型的文件，二进制流数据都是资源，是Spring内部对资源的统一描述，整个体系类图网如下：<br><img src="/2018/06/03/spring/resource.png" alt="Resource" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/resource.png" class="lozad post-image"></p>
-<h2 id="ResourceLoader"><a href="#ResourceLoader" class="headerlink" title="ResourceLoader"></a>ResourceLoader</h2><p>ResourceLoader&#x2F;Resolver体系，负责资源的加载，这里的资源指的是xml、properties等文件资源，返回一个对应类型的Resource对象。<br><img src="/2018/06/03/spring/ResourceLoader.png" alt="ResourceLoader" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/ResourceLoader.png" class="lozad post-image"></p>
-<h2 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h2><p>对bean对象描述的基本数据结构。<br><img src="/2018/06/03/spring/BeanDefinition.png" alt="BeanDefinition" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/BeanDefinition.png" class="lozad post-image"></p>
-<h2 id="BeanDefinitionReader"><a href="#BeanDefinitionReader" class="headerlink" title="BeanDefinitionReader"></a>BeanDefinitionReader</h2><p>Bean构造组件，BeanDefinitionReader体系，将Resource对象，转换成BeanDefinition对象，就是将内部资源数据转换成Spring Bean描述数据。就是将统一资源数据对象读取转换成相应内部对象。<br><img src="/2018/06/03/spring/BeanDefinitionReader.png" alt="BeanDefinitionReader" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/BeanDefinitionReader.png" class="lozad post-image"></p>
-<h2 id="SingletonBeanRegister-x2F-AliasRegister"><a href="#SingletonBeanRegister-x2F-AliasRegister" class="headerlink" title="SingletonBeanRegister&#x2F;AliasRegister"></a>SingletonBeanRegister&#x2F;AliasRegister</h2><p>Bean注册组件，将BeanDefinition对象注册到BeanFactory中。<br><img src="/2018/06/03/spring/BeanRegister.png" alt="BeanRegister" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/BeanRegister.png" class="lozad post-image"></p>
-<h2 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h2><p>Bean容器组件，整个IoC容器核心，所谓Bean容器，就是这里装着Bean对象以及所需要的各种数据。其中BeanFactory是纯粹的Bean容器，用来存储描述Bean，无关其他环境，而像ApplicationContext，也是Bean容器，但它和应用环境息息相关，所以被称为应用上下文（环境）更恰当，从图中也能看出来，ApplicationContext不仅有着BeanFactory“血统”，同时也继承了EnvironmentCapable、MessageSource、ApplicationEventPublisher，即扩展了其许多额外功能，而其实现类则是和具体应用相关。<br><img src="/2018/06/03/spring/BeanFactory-component.png" alt="BeanFactory" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/BeanFactory-component.png" class="lozad post-image"></p>
-<h1 id="SpringBoot启动过程"><a href="#SpringBoot启动过程" class="headerlink" title="SpringBoot启动过程"></a>SpringBoot启动过程</h1><h1 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h1><p>以典型的web应用为例，一个请求从接收到返回的处理过程相当复杂，如下图所示，主要经过DispatcherServlet、HandlerMapping、Controller、ViewResolver、Model等：<br><img src="/2018/06/03/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="request handle" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" class="lozad post-image"></p>
+<h2 id="Resource"><a href="#Resource" class="headerlink" title="Resource"></a>Resource</h2><p>如各类型的文件，二进制流数据都是资源，是Spring内部对资源的统一描述，整个体系类图网如下：<br><img src="/cs/spring/resource.png" alt="Resource" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/resource.png" class="lozad post-image"></p>
+<h2 id="ResourceLoader"><a href="#ResourceLoader" class="headerlink" title="ResourceLoader"></a>ResourceLoader</h2><p>ResourceLoader&#x2F;Resolver体系，负责资源的加载，这里的资源指的是xml、properties等文件资源，返回一个对应类型的Resource对象。<br><img src="/cs/spring/ResourceLoader.png" alt="ResourceLoader" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/ResourceLoader.png" class="lozad post-image"></p>
+<h2 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h2><p>对bean对象描述的基本数据结构。<br><img src="/cs/spring/BeanDefinition.png" alt="BeanDefinition" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/BeanDefinition.png" class="lozad post-image"></p>
+<h2 id="BeanDefinitionReader"><a href="#BeanDefinitionReader" class="headerlink" title="BeanDefinitionReader"></a>BeanDefinitionReader</h2><p>Bean构造组件，BeanDefinitionReader体系，将Resource对象，转换成BeanDefinition对象，就是将内部资源数据转换成Spring Bean描述数据。就是将统一资源数据对象读取转换成相应内部对象。<br><img src="/cs/spring/BeanDefinitionReader.png" alt="BeanDefinitionReader" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/BeanDefinitionReader.png" class="lozad post-image"></p>
+<h2 id="SingletonBeanRegister-x2F-AliasRegister"><a href="#SingletonBeanRegister-x2F-AliasRegister" class="headerlink" title="SingletonBeanRegister&#x2F;AliasRegister"></a>SingletonBeanRegister&#x2F;AliasRegister</h2><p>Bean注册组件，将BeanDefinition对象注册到BeanFactory中。<br><img src="/cs/spring/BeanRegister.png" alt="BeanRegister" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/BeanRegister.png" class="lozad post-image"></p>
+<h2 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h2><p>Bean容器组件，整个IoC容器核心，所谓Bean容器，就是这里装着Bean对象以及所需要的各种数据。其中BeanFactory是纯粹的Bean容器，用来存储描述Bean，无关其他环境，而像ApplicationContext，也是Bean容器，但它和应用环境息息相关，所以被称为应用上下文（环境）更恰当，从图中也能看出来，ApplicationContext不仅有着BeanFactory“血统”，同时也继承了EnvironmentCapable、MessageSource、ApplicationEventPublisher，即扩展了其许多额外功能，而其实现类则是和具体应用相关。<br><img src="/cs/spring/BeanFactory-component.png" alt="BeanFactory" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/BeanFactory-component.png" class="lozad post-image"></p>
+<h1 id="SpringBoot启动过程"><a href="#SpringBoot启动过程" class="headerlink" title="SpringBoot启动过程"></a>SpringBoot启动过程</h1><h1 id="请求处理过程"><a href="#请求处理过程" class="headerlink" title="请求处理过程"></a>请求处理过程</h1><p>以典型的web应用为例，一个请求从接收到返回的处理过程相当复杂，如下图所示，主要经过DispatcherServlet、HandlerMapping、Controller、ViewResolver、Model等：<br><img src="/cs/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="request handle" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" class="lozad post-image"></p>
 <ol>
 <li>客户端请求提交到DispatcherServlet；</li>
 <li>由DisPatcherServlet控制器寻找一个或多个HandlerMapping，找到处理请求的Controller；</li>
@@ -396,9 +396,9 @@
 <li>视图负责将结果显示到客户端。</li>
 </ol>
 <p>Spring MVC所有的请求都经过DispatcherServlet来统一分发，在 DispatcherServlet将请求分发给Controller之前需要借助Spring MVC提供的 HandlerMapping定位到具体的Controller。<br>HandlerMapping接口负责完成客户请求到Controller映射。<br>Controller接口将处理用户请求，这和Java Servlet扮演的角色是一致的。一旦Controller处理完用户请求，将返回ModelAndView对象给DispatcherServlet前端控制器，ModelAndView中包含了模型（Model）和视图（View）。<br>从宏观角度考虑，DispatcherServlet是整个Web应用的控制器；从微观考虑，Controller是单个Http请求处理过程中的控制器，而ModelAndView是Http请求过程中返回的模型（Model）和视图（View）。<br>ViewResolver接口（视图解析器）在Web应用中负责查找View对象，从而将相应结果渲染给客户。</p>
-<h1 id="过滤器和拦截器"><a href="#过滤器和拦截器" class="headerlink" title="过滤器和拦截器"></a>过滤器和拦截器</h1><p>这张图解释了典型spring应用常用组件及触发顺序：<br><img src="/2018/06/03/spring/request.png" alt="request handle" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/request.png" class="lozad post-image"><br>过滤器在请求进入容器之后、进入servlet之前就被触发，此时还没有进入spring的管辖范围。拦截器是spring提供并管理的，所以它能获取IoC容器信息，比如拿到容器里的bean。</p>
-<p>这张图解释了常用组件具体方法的执行顺序：<br><img src="/2018/06/03/spring/%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.png" alt="执行顺序" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.png" class="lozad post-image"></p>
-<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><p>Filter是JavaEE中Servlet规范的一个组件，它可以在http请求到达Servlet之前，被N个Filter处理：<br><img src="/2018/06/03/spring/filter.webp" alt="过滤器" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/filter.webp" class="lozad post-image"><br>过滤器的实现是基于函数回调。</p>
+<h1 id="过滤器和拦截器"><a href="#过滤器和拦截器" class="headerlink" title="过滤器和拦截器"></a>过滤器和拦截器</h1><p>这张图解释了典型spring应用常用组件及触发顺序：<br><img src="/cs/spring/request.png" alt="request handle" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/request.png" class="lozad post-image"><br>过滤器在请求进入容器之后、进入servlet之前就被触发，此时还没有进入spring的管辖范围。拦截器是spring提供并管理的，所以它能获取IoC容器信息，比如拿到容器里的bean。</p>
+<p>这张图解释了常用组件具体方法的执行顺序：<br><img src="/cs/spring/%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.png" alt="执行顺序" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.png" class="lozad post-image"></p>
+<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><p>Filter是JavaEE中Servlet规范的一个组件，它可以在http请求到达Servlet之前，被N个Filter处理：<br><img src="/cs/spring/filter.webp" alt="过滤器" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/filter.webp" class="lozad post-image"><br>过滤器的实现是基于函数回调。</p>
 <h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
 <li>过滤敏感词汇（防止sql注入）</li>
 <li>设置字符编码</li>
@@ -417,7 +417,7 @@
 </ul>
 <h1 id="后处理器"><a href="#后处理器" class="headerlink" title="后处理器"></a>后处理器</h1><h2 id="BeanFactoryPostProcessor"><a href="#BeanFactoryPostProcessor" class="headerlink" title="BeanFactoryPostProcessor"></a>BeanFactoryPostProcessor</h2><p>容器级别的后处理器。</p>
 <h2 id="BeanPostProcessor"><a href="#BeanPostProcessor" class="headerlink" title="BeanPostProcessor"></a>BeanPostProcessor</h2><h1 id="监听器"><a href="#监听器" class="headerlink" title="监听器"></a>监听器</h1><h1 id="三级缓存"><a href="#三级缓存" class="headerlink" title="三级缓存"></a>三级缓存</h1><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1497692">https://cloud.tencent.com/developer/article/1497692</a></p>
-<h1 id="bean生命周期"><a href="#bean生命周期" class="headerlink" title="bean生命周期"></a>bean生命周期</h1><p>IoC容器初始化过程：<br><img src="/2018/06/03/spring/ioc-initialization.png" alt="IoC初始化过程" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/ioc-initialization.png" class="lozad post-image"><br>Spring容器中Bean的生命周期由多个特定的阶段组成，每个阶段都允许外界对Bean加以控制。在Spring中可以从两个层面定义Bean的生命周期：Bean的作用范围；实例化Bean时所经历的一系列阶段。</p>
+<h1 id="bean生命周期"><a href="#bean生命周期" class="headerlink" title="bean生命周期"></a>bean生命周期</h1><p>IoC容器初始化过程：<br><img src="/cs/spring/ioc-initialization.png" alt="IoC初始化过程" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/ioc-initialization.png" class="lozad post-image"><br>Spring容器中Bean的生命周期由多个特定的阶段组成，每个阶段都允许外界对Bean加以控制。在Spring中可以从两个层面定义Bean的生命周期：Bean的作用范围；实例化Bean时所经历的一系列阶段。</p>
 <h2 id="文字描述"><a href="#文字描述" class="headerlink" title="文字描述"></a>文字描述</h2><ol>
 <li><p>Bean容器在配置文件中找到Spring Bean的定义。</p>
 </li>
@@ -546,14 +546,14 @@
 <li>载入多个（有继承关系）上下文 ，使得每一个上下文都专注于一个特定的层次，比如应用的web层;</li>
 </ul>
 <p>其他各种BeanFactory的子接口、子类也都是扩展了某种功能的类工厂，用于特定场景。</p>
-<h3 id="主要方法："><a href="#主要方法：" class="headerlink" title="主要方法："></a>主要方法：</h3><p><img src="/2018/06/03/spring/BeanFactory.png" alt="BeanFactory methods" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/BeanFactory.png" class="lozad post-image"></p>
+<h3 id="主要方法："><a href="#主要方法：" class="headerlink" title="主要方法："></a>主要方法：</h3><p><img src="/cs/spring/BeanFactory.png" alt="BeanFactory methods" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/BeanFactory.png" class="lozad post-image"></p>
 <h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
 <li>从IOC容器中获取Bean(byName or byType)</li>
 <li>检索IOC容器中是否包含指定的Bean</li>
 <li>判断Bean是否为单例</li>
 </ul>
 <h2 id="FactoryBean"><a href="#FactoryBean" class="headerlink" title="FactoryBean"></a>FactoryBean</h2><p>首先它是一个Bean，用于生产&#x2F;修饰其他Bean的工厂Bean，表现为一个工厂的职责，主要用到工厂模式、装饰器模式。通常情况下，spring容器担任工厂的角色，但也存在一些场景，比如某些Bean实例化过程复杂，需要配置大量信息，此时可以提供一个FactoryBean，用它来实现定制化的Bean实例化逻辑。FactoryBean接口对于Spring框架来说有着重要地位，自身就提供了70多个FactoryBean的实现。</p>
-<h3 id="主要方法：-1"><a href="#主要方法：-1" class="headerlink" title="主要方法："></a>主要方法：</h3><p><img src="/2018/06/03/spring/FactoryBean.png" alt="BeanFactory methods" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/06/03/spring/FactoryBean.png" class="lozad post-image"></p>
+<h3 id="主要方法：-1"><a href="#主要方法：-1" class="headerlink" title="主要方法："></a>主要方法：</h3><p><img src="/cs/spring/FactoryBean.png" alt="BeanFactory methods" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/spring/FactoryBean.png" class="lozad post-image"></p>
 <h3 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h3><p>FactoryBean在Spring中最为典型的一个应用就是用来创建AOP的代理对象。AOP实际上是Spring在运行时创建了一个代理对象，也就是说这个对象是在运行时创建的，而不是一开始就定义好的，这很符合工厂方法模式。更形象地说，AOP代理对象通过Java的<strong>反射机制</strong>，在运行时创建了一个代理对象，在代理对象的目标方法中根据业务要求织入了相应的方法。这个对象在Spring中就是——ProxyFactoryBean。</p>
 <h1 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h1><p>Inversion of Control，控制反转，也称依赖注入（DI，Dependency Injection）。应用对象之间的解耦。<br>通常所讨论的依赖注入是将一个bean的引用注入到另一个bean的属性或构造器参数中，即将一个对象与另一个对象关联起来。java的反射是实现依赖注入的底层技术。依赖注入是Spring容器的内核，AOP、声明式事务等功能也都基于此。<br>Spring是一种容器框架，它帮助完成类的初始化和装配工作，让开发者从这些底层实现类的实例化、依赖关系装配等工作中解脱出来，专注于业务逻辑的开发工作。它通过配置文件或注解描述类和类之间的依赖关系，利用java的反射功能实例化Bean并建立Bean之间的依赖关系，自动完成类的初始化和依赖注入工作。此外，Spring还提供Bean实例缓存、生命周期管理、Bean实例代理、事件发布、资源装载等高级服务。<br>BeanFactory(com.springframework.beans.factory.BeanFactory)是Spring框架最核心的接口，它提供了高级IoC的配置机制。BeanFactory使管理不同类型的java对象成为可能，应用上下文(com.springframework.context.ApplicationContext)建立在BeanFactory基础之上，提供了更多面向应用的功能，如i18n和框架事件体系等，更易于创建实际应用。一般称BeanFactory为IoC容器，称ApplicationContext为应用上下文，有时也称后者为Spring容器。用途上，BeanFactory是Spring框架的基础设施，面向Spring本身；ApplicationContext面向使用Spring框架的开发者，几乎所有的应用场合都可以直接使用ApplicationContext而非底层的BeanFactory。</p>
 <h2 id="ApplicationContext"><a href="#ApplicationContext" class="headerlink" title="ApplicationContext"></a>ApplicationContext</h2><p>如果说BeanFactory是Spring的”心脏“，那么ApplicationContext就是完整的”身躯“。ApplicationContext由BeanFactory派生而来，提供了更多面向实际应用的功能。在BeanFactory中，很多功能需要以编程的方式实现，而在ApplicationContext中则可以通过配置的方式实现。<br>ApplicationContext的主要实现类是ClassPathXmlApplicationContext和FileSystemXmlApplicationContext，前者默认从类路径加载配置文件，后者默认从文件系统中装载配置文件。<br><img src="https://raw.githubusercontent.com/lazy-snail/ImageHosting/master/wiki/ApplicationContext-hierarchy.png" alt="ApplicationContext类体系结构" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://raw.githubusercontent.com/lazy-snail/ImageHosting/master/wiki/ApplicationContext-hierarchy.png" class="lozad post-image"><br>可见，除继承HierarchicalBeanFactory和ListableBeanFactory接口外，ApplicationContext还通过多个其它接口扩展BeanFactory的功能：</p>
@@ -637,8 +637,8 @@
           <span style="font-weight: bold;">文章链接：</span><a 
             target="_blank" 
             rel="nofollow noopener noreferrer" 
-            href="https://lazy-snail.github.io/2018/06/03/spring/">
-            https://lazy-snail.github.io/2018/06/03/spring/
+            href="https://lazy-snail.github.io/cs/spring/">
+            https://lazy-snail.github.io/cs/spring/
           </a>
         </p>
         <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
@@ -650,13 +650,13 @@
   
     <div class="nav-item-prev">
       <a 
-        href="/2018/06/03/os/" 
+        href="/cs/cs/" 
         class="nav-link">
         <i class="iconfont icon-left nav-prev-icon"></i>
         <div>
           <div class="nav-label">Prev</div>
           
-            <div class="nav-title">os </div>
+            <div class="nav-title">CS </div>
           
         </div>
       </a>
@@ -665,12 +665,12 @@
   
     <div class="nav-item-next">
       <a 
-        href="/2018/03/29/algs/" 
+        href="/cs/mw/" 
         class="nav-link">
         <div>
           <div class="nav-label">Next</div>
           
-            <div class="nav-title">algs </div>
+            <div class="nav-title">中间件 </div>
           
         </div>
         <i class="iconfont icon-right nav-next-icon"></i>
@@ -707,19 +707,19 @@
   <a 
     class="author-posts-count" 
     href="/archives">
-    <span>8</span>
+    <span>9</span>
     <span>Posts</span>
   </a>
   <a 
     class="author-categories-count" 
     href="/categories">
-    <span>6</span>
+    <span>8</span>
     <span>Categories</span>
   </a>
   <a 
     class="author-tags-count" 
     href="/tags">
-    <span>6</span>
+    <span>8</span>
     <span>Tags</span>
   </a>
 </div>
@@ -751,16 +751,16 @@
   </div>
   <div class="categories-list">
     
-      <a href="/categories/algs/">
+      <a href="/categories/cn/">
         <div class="categories-list-item">
-          algs
+          cn
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
     
-      <a href="/categories/cn/">
+      <a href="/categories/algs/">
         <div class="categories-list-item">
-          cn
+          algs
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
@@ -769,13 +769,6 @@
         <div class="categories-list-item">
           db
           <span class="categories-list-item-badge">1</span>
-        </div>
-      </a>
-    
-      <a href="/categories/java/">
-        <div class="categories-list-item">
-          java
-          <span class="categories-list-item-badge">2</span>
         </div>
       </a>
     
@@ -789,6 +782,27 @@
       <a href="/categories/os/">
         <div class="categories-list-item">
           os
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/aqad/">
+        <div class="categories-list-item">
+          aqad
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cs/">
+        <div class="categories-list-item">
+          cs
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
@@ -814,6 +828,18 @@
       </a>
     
       <a 
+        href="/tags/cs/" 
+        title="cs">
+        <div class="tags-list-item">cs</div>
+      </a>
+    
+      <a 
+        href="/tags/aqad/" 
+        title="aqad">
+        <div class="tags-list-item">aqad</div>
+      </a>
+    
+      <a 
         href="/tags/os/" 
         title="os">
         <div class="tags-list-item">os</div>
@@ -832,15 +858,15 @@
       </a>
     
       <a 
-        href="/tags/cn/" 
-        title="cn">
-        <div class="tags-list-item">cn</div>
-      </a>
-    
-      <a 
         href="/tags/algs/" 
         title="algs">
         <div class="tags-list-item">algs</div>
+      </a>
+    
+      <a 
+        href="/tags/cn/" 
+        title="cn">
+        <div class="tags-list-item">cn</div>
       </a>
     
   </div>
@@ -876,23 +902,23 @@
   <div class="recent-posts-list">
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/cn/"><div class="recent-posts-item-content">cn</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/db/"><div class="recent-posts-item-content">database</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/cs/"><div class="recent-posts-item-content">cs</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/os/"><div class="recent-posts-item-content">OS</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/db/"><div class="recent-posts-item-content">db</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/java/"><div class="recent-posts-item-content">java</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/java/"><div class="recent-posts-item-content">java</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/aqad/"><div class="recent-posts-item-content">a question a day</div></a>
       </div>
     
   </div>

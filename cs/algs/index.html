@@ -18,17 +18,17 @@
   <link 
     rel="icon" 
     href="/img/little-prince.png">
-  <title>algs</title>
+  <title>algorithm</title>
   
     
       <meta 
         property="og:title" 
-        content="algs">
+        content="algorithm">
     
     
       <meta 
         property="og:url" 
-        content="https://lazy-snail.github.io/2018/03/29/algs/index.html">
+        content="https://lazy-snail.github.io/cs/algs/index.html">
     
     
       <meta 
@@ -42,10 +42,10 @@
         content="article">
       <meta 
         property="og:article:published_time" 
-        content="2018-03-29">
+        content="2022-07-17">
       <meta 
         property="og:article:modified_time" 
-        content="2022-07-16">
+        content="2022-07-17">
       <meta 
         property="og:article:author" 
         content="Neil">
@@ -293,16 +293,16 @@
 <article class="card card-content">
   <header>
     <h1 class="post-title">
-      algs
+      algorithm
     </h1>
   </header>
   <div class="post-meta post-show-meta">
-    <time datetime="2018-03-29T12:51:50.000Z">
+    <time datetime="2022-07-16T17:50:59.676Z">
       <i 
         class="iconfont icon-calendar" 
         style="margin-right: 2px;">
       </i>
-      <span>2018-03-29</span>
+      <span>2022-07-17</span>
     </time>
     
       <span class="dot"></span>
@@ -379,7 +379,7 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h3><p>思想：使数组中任意间隔为 h 的元素都是有序的。类似于插入排序，只不过插入排序是交换相邻（间隔为1）元素，而希尔排序是交换间隔为 h 的元素。</p>
-<img src="/2018/03/29/algs/03/29/algs/Shell.PNG" class title="一个h有序数组，即h个有序子数组组成" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/03/29/algs/Shell.PNG" class="lozad post-image">
+<img src="/cs/algs/algs/Shell.PNG" class title="一个h有序数组，即h个有序子数组组成" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/algs/Shell.PNG" class="lozad post-image">
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">ShellSort</span><span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>a<span class="token punctuation">,</span> <span class="token keyword">int</span> length<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
     <span class="token keyword">int</span> h <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
@@ -585,7 +585,7 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
 <h1 id="KMP算法"><a href="#KMP算法" class="headerlink" title="KMP算法"></a>KMP算法</h1><p>经典的字符串匹配算法。但实现起来并不复杂。<br>首先一个概念是：</p>
 <h2 id="部分匹配表-The-Partial-Match-Table"><a href="#部分匹配表-The-Partial-Match-Table" class="headerlink" title="部分匹配表 The Partial Match Table"></a>部分匹配表 The Partial Match Table</h2><p>参考这篇博文：<a target="_blank" rel="noopener" href="http://jakeboxer.com/blog/2009/12/13/the-knuth-morris-pratt-algorithm-in-my-own-words/">The Knuth-Morris-Pratt Algorithm</a><br>当弄清楚了什么是部分匹配表之后，接下来就是怎么使用它，在匹配失败的时候进行适当的跳跃。<br>使用参考这部分内容<a target="_blank" rel="noopener" href="https://blog.csdn.net/v_july_v/article/details/7041827">从头到尾彻底理解KMP</a></p>
 <p>最后给出一个<a target="_blank" rel="noopener" href="https://blog.csdn.net/biaobiaoqi/article/details/8975536">实现</a></p>
-<h1 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h1><h2 id="算法-amp-数据结构"><a href="#算法-amp-数据结构" class="headerlink" title="算法 &amp; 数据结构"></a>算法 &amp; 数据结构</h2><p>$$程序 &#x3D; 算法 + 数据结构$$<br>TAOCP中，Donald并没有直接给出“算法”的定义，而是在用了几页的篇幅追溯了一番“Algorithms”这个词的起源以尝试让读者理解它的含义之后，用了欧几里得求解两个正整数最大公因子的例子做阐述：<br><img src="/2018/03/29/algs/Euclid-algorithm.png" alt="欧几里得算法" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/Euclid-algorithm.png" class="lozad post-image"><br>其中最重要的是→，赋值&#x2F;代替。<br>他的学生、红皮算法书的作者-Robert Sedgewick沿用这个例子并尝试给出了一个定义：The term algorithm is used in computer science to describe a <strong>finite</strong>, <strong>deterministic</strong>, and <strong>effective</strong> problem-solving method suitable for implementation as a computer program.<br>同时指出了二者之间的关系：大多数算法需要适当地组织数据，<strong>为了组织数据就产生了数据结构</strong>。一脉相承的观点是，数据结构是算法的副产品&#x2F;结果（data structures exist as the byproducts or end products of algorithms）。</p>
+<h1 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h1><h2 id="算法-amp-数据结构"><a href="#算法-amp-数据结构" class="headerlink" title="算法 &amp; 数据结构"></a>算法 &amp; 数据结构</h2><p>$$程序 &#x3D; 算法 + 数据结构$$<br>TAOCP中，Donald并没有直接给出“算法”的定义，而是在用了几页的篇幅追溯了一番“Algorithms”这个词的起源以尝试让读者理解它的含义之后，用了欧几里得求解两个正整数最大公因子的例子做阐述：<br><img src="/cs/algs/Euclid-algorithm.png" alt="欧几里得算法" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/Euclid-algorithm.png" class="lozad post-image"><br>其中最重要的是→，赋值&#x2F;代替。<br>他的学生、红皮算法书的作者-Robert Sedgewick沿用这个例子并尝试给出了一个定义：The term algorithm is used in computer science to describe a <strong>finite</strong>, <strong>deterministic</strong>, and <strong>effective</strong> problem-solving method suitable for implementation as a computer program.<br>同时指出了二者之间的关系：大多数算法需要适当地组织数据，<strong>为了组织数据就产生了数据结构</strong>。一脉相承的观点是，数据结构是算法的副产品&#x2F;结果（data structures exist as the byproducts or end products of algorithms）。</p>
 <details>
   <summary>数据结构的作用</summary>
 
@@ -593,7 +593,7 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
 </details>
 
 <h2 id="哈希、红黑树、跳表"><a href="#哈希、红黑树、跳表" class="headerlink" title="哈希、红黑树、跳表"></a>哈希、红黑树、跳表</h2><p>这里关注K-V型数据结构。</p>
-<h3 id="合适的数据结构"><a href="#合适的数据结构" class="headerlink" title="合适的数据结构"></a>合适的数据结构</h3><p>关注以下速查表数据。<br><img src="/2018/03/29/algs/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E6%9D%82%E5%BA%A6.png" alt="数据结构复杂度" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E6%9D%82%E5%BA%A6.png" class="lozad post-image"><br>其中，常用的key-value数据结构有三种：<br>Hash表：插入、查找最快，为$O(1)$；如使用链表实现则可实现无锁；数据有序化需要显式的排序操作。<br>红黑树：插入、查找为$\log(n)$，但常数项较小；无锁实现的复杂性很高，一般需要加锁；数据天然有序。<br>SkipList：插入、查找为$\log(n)$，但常数项比红黑树要大；底层结构为链表，可无锁实现；数据天然有序。</p>
+<h3 id="合适的数据结构"><a href="#合适的数据结构" class="headerlink" title="合适的数据结构"></a>合适的数据结构</h3><p>关注以下速查表数据。<br><img src="/cs/algs/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E6%9D%82%E5%BA%A6.png" alt="数据结构复杂度" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E6%9D%82%E5%BA%A6.png" class="lozad post-image"><br>其中，常用的key-value数据结构有三种：<br>Hash表：插入、查找最快，为$O(1)$；如使用链表实现则可实现无锁；数据有序化需要显式的排序操作。<br>红黑树：插入、查找为$\log(n)$，但常数项较小；无锁实现的复杂性很高，一般需要加锁；数据天然有序。<br>SkipList：插入、查找为$\log(n)$，但常数项比红黑树要大；底层结构为链表，可无锁实现；数据天然有序。</p>
 <ul>
 <li>首先，如果能确定某些数据是静态的，以ACA为例，我们的文案数据目前就可以看成是静态的：可能有描述上的调整，但频次很低，并且数据量不大。这部分数据如果采用直接加载到内存或是中间缓存的话，结构化为HashMap是不错的选择；</li>
 <li>如前所述，大部分数据操作场景是需要增删改操作的，而非仅仅只有读操作。这里不再讨论堆、队列等使用场景，专注通常情况下的<strong>数据的存取操作</strong>，此时需要兼顾读取、和操作后恢复有序的效率，此时Hash表不再是好的选择：迭代、修改操作的时间复杂度比较高，而红黑树则能很好地满足功能需求；</li>
@@ -611,9 +611,9 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
 <li>每一层都是一个有序的链表；</li>
 <li>最底层(Level 1)的链表包含所有元素；</li>
 <li>如果一个元素出现在 Level i 的链表中，则它在 Level i 之下的链表也都会出现；</li>
-<li>每个节点包含两个指针，一个指向同一链表中的下一个元素，一个指向下面一层的元素。<br><img src="/2018/03/29/algs/Skip_list.svg" alt="跳表结构" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/Skip_list.svg" class="lozad post-image"></li>
+<li>每个节点包含两个指针，一个指向同一链表中的下一个元素，一个指向下面一层的元素。<br><img src="/cs/algs/Skip_list.svg" alt="跳表结构" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/Skip_list.svg" class="lozad post-image"></li>
 </ul>
-<h2 id="跳表实现"><a href="#跳表实现" class="headerlink" title="跳表实现"></a>跳表实现</h2><h3 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h3><p>考虑一个链表：<br><img src="/2018/03/29/algs/skipList%E6%9E%84%E9%80%A0-1.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/skipList%E6%9E%84%E9%80%A0-1.jpg" class="lozad post-image"><br>从该有序表中搜索元素&lt; 23, 43, 59&gt;，需要比较的次数分别为&lt; 2, 4, 6 &gt;，总共比较的次数为 2 + 4 + 6 &#x3D; 12 次。<br>有没有优化的算法？链表是有序的，但不能使用二分查找。类似二叉搜索树，我们把一些节点提取出来，作为索引。得到如下结构：<br><img src="/2018/03/29/algs/skipList%E6%9E%84%E9%80%A0-2.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/skipList%E6%9E%84%E9%80%A0-2.jpg" class="lozad post-image"><br>这里把&lt; 14, 34, 50, 72 &gt;提取出来作为一级索引，这样搜索的时候就可以减少比较次数了。还可以再从一级索引提取一些元素出来，作为二级索引，变成如下结构：<br><img src="/2018/03/29/algs/skipList%E6%9E%84%E9%80%A0-3.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/skipList%E6%9E%84%E9%80%A0-3.jpg" class="lozad post-image"></p>
+<h2 id="跳表实现"><a href="#跳表实现" class="headerlink" title="跳表实现"></a>跳表实现</h2><h3 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h3><p>考虑一个链表：<br><img src="/cs/algs/skipList%E6%9E%84%E9%80%A0-1.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/skipList%E6%9E%84%E9%80%A0-1.jpg" class="lozad post-image"><br>从该有序表中搜索元素&lt; 23, 43, 59&gt;，需要比较的次数分别为&lt; 2, 4, 6 &gt;，总共比较的次数为 2 + 4 + 6 &#x3D; 12 次。<br>有没有优化的算法？链表是有序的，但不能使用二分查找。类似二叉搜索树，我们把一些节点提取出来，作为索引。得到如下结构：<br><img src="/cs/algs/skipList%E6%9E%84%E9%80%A0-2.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/skipList%E6%9E%84%E9%80%A0-2.jpg" class="lozad post-image"><br>这里把&lt; 14, 34, 50, 72 &gt;提取出来作为一级索引，这样搜索的时候就可以减少比较次数了。还可以再从一级索引提取一些元素出来，作为二级索引，变成如下结构：<br><img src="/cs/algs/skipList%E6%9E%84%E9%80%A0-3.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/skipList%E6%9E%84%E9%80%A0-3.jpg" class="lozad post-image"></p>
 <details>
   <summary>节点类</summary>
 
@@ -631,7 +631,7 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
 <p>redis 使用C实现，详见：<a target="_blank" rel="noopener" href="https://github.com/antirez/redis/blob/unstable/src/server.h">https://github.com/antirez/redis/blob/unstable/src/server.h</a></p>
 </details>
 
-<h3 id="搜索元素"><a href="#搜索元素" class="headerlink" title="搜索元素"></a>搜索元素</h3><p>查找元素 117：<br><img src="/2018/03/29/algs/skipList%E6%9F%A5%E6%89%BE.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/skipList%E6%9F%A5%E6%89%BE.jpg" class="lozad post-image"></p>
+<h3 id="搜索元素"><a href="#搜索元素" class="headerlink" title="搜索元素"></a>搜索元素</h3><p>查找元素 117：<br><img src="/cs/algs/skipList%E6%9F%A5%E6%89%BE.jpg" alt="跳表构造" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/skipList%E6%9F%A5%E6%89%BE.jpg" class="lozad post-image"></p>
 <ol>
 <li>比较21，比 21 大，往后面找</li>
 <li>比较37，比 37大，比链表最大值小，从 37 的下面一层开始找</li>
@@ -668,7 +668,7 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </details>
 
-<h3 id="新增元素"><a href="#新增元素" class="headerlink" title="新增元素"></a>新增元素</h3><p>先确定该元素要占据的层数 K（丢硬币，随机），然后在 Level 1 … Level K 各个层的链表都插入元素：<br>插入 119， K &#x3D; 2<br><img src="/2018/03/29/algs/skipList%E6%96%B0%E5%A2%9E-1.jpg" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/skipList%E6%96%B0%E5%A2%9E-1.jpg" class="lozad post-image"><br>其中，然随机变量 K 满足参数为 $p &#x3D; 1&#x2F;2$ 的几何分布，期望值 $E[K] &#x3D; 1&#x2F;p &#x3D; 2$。即各个元素的层数，期望值是 2 层。<br><img src="/2018/03/29/algs/Skip_list_add_element.gif" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/Skip_list_add_element.gif" class="lozad post-image"></p>
+<h3 id="新增元素"><a href="#新增元素" class="headerlink" title="新增元素"></a>新增元素</h3><p>先确定该元素要占据的层数 K（丢硬币，随机），然后在 Level 1 … Level K 各个层的链表都插入元素：<br>插入 119， K &#x3D; 2<br><img src="/cs/algs/skipList%E6%96%B0%E5%A2%9E-1.jpg" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/skipList%E6%96%B0%E5%A2%9E-1.jpg" class="lozad post-image"><br>其中，然随机变量 K 满足参数为 $p &#x3D; 1&#x2F;2$ 的几何分布，期望值 $E[K] &#x3D; 1&#x2F;p &#x3D; 2$。即各个元素的层数，期望值是 2 层。<br><img src="/cs/algs/Skip_list_add_element.gif" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/Skip_list_add_element.gif" class="lozad post-image"></p>
 <details>
   <summary>插入</summary>
 
@@ -768,7 +768,7 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
 </details>
 
 
-<h3 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h3><p>采用标准的链表删除即可。<br>删除 71<br><img src="/2018/03/29/algs/skipList%E5%88%A0%E9%99%A4.jpg" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/2018/03/29/algs/skipList%E5%88%A0%E9%99%A4.jpg" class="lozad post-image"></p>
+<h3 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h3><p>采用标准的链表删除即可。<br>删除 71<br><img src="/cs/algs/skipList%E5%88%A0%E9%99%A4.jpg" alt="跳表-新增元素" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/cs/algs/skipList%E5%88%A0%E9%99%A4.jpg" class="lozad post-image"></p>
 <details>
   <summary>删除</summary>
 
@@ -848,8 +848,8 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
           <span style="font-weight: bold;">文章链接：</span><a 
             target="_blank" 
             rel="nofollow noopener noreferrer" 
-            href="https://lazy-snail.github.io/2018/03/29/algs/">
-            https://lazy-snail.github.io/2018/03/29/algs/
+            href="https://lazy-snail.github.io/cs/algs/">
+            https://lazy-snail.github.io/cs/algs/
           </a>
         </p>
         <p><span style="font-weight: bold;">版权声明：</span>转载请注明出处</p>
@@ -861,18 +861,32 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
   
     <div class="nav-item-prev">
       <a 
-        href="/2018/06/03/spring/" 
+        href="/cs/aqad/" 
         class="nav-link">
         <i class="iconfont icon-left nav-prev-icon"></i>
         <div>
           <div class="nav-label">Prev</div>
           
-            <div class="nav-title">spring </div>
+            <div class="nav-title">a question a day </div>
           
         </div>
       </a>
     </div>
   
+  
+    <div class="nav-item-next">
+      <a 
+        href="/cs/cn/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">cn </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
   
 </div>
 
@@ -904,19 +918,19 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
   <a 
     class="author-posts-count" 
     href="/archives">
-    <span>8</span>
+    <span>9</span>
     <span>Posts</span>
   </a>
   <a 
     class="author-categories-count" 
     href="/categories">
-    <span>6</span>
+    <span>8</span>
     <span>Categories</span>
   </a>
   <a 
     class="author-tags-count" 
     href="/tags">
-    <span>6</span>
+    <span>8</span>
     <span>Tags</span>
   </a>
 </div>
@@ -948,16 +962,16 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
   </div>
   <div class="categories-list">
     
-      <a href="/categories/algs/">
+      <a href="/categories/cn/">
         <div class="categories-list-item">
-          algs
+          cn
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
     
-      <a href="/categories/cn/">
+      <a href="/categories/algs/">
         <div class="categories-list-item">
-          cn
+          algs
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
@@ -966,13 +980,6 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
         <div class="categories-list-item">
           db
           <span class="categories-list-item-badge">1</span>
-        </div>
-      </a>
-    
-      <a href="/categories/java/">
-        <div class="categories-list-item">
-          java
-          <span class="categories-list-item-badge">2</span>
         </div>
       </a>
     
@@ -986,6 +993,27 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
       <a href="/categories/os/">
         <div class="categories-list-item">
           os
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/java/">
+        <div class="categories-list-item">
+          java
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/aqad/">
+        <div class="categories-list-item">
+          aqad
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cs/">
+        <div class="categories-list-item">
+          cs
           <span class="categories-list-item-badge">1</span>
         </div>
       </a>
@@ -1011,6 +1039,18 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
       </a>
     
       <a 
+        href="/tags/cs/" 
+        title="cs">
+        <div class="tags-list-item">cs</div>
+      </a>
+    
+      <a 
+        href="/tags/aqad/" 
+        title="aqad">
+        <div class="tags-list-item">aqad</div>
+      </a>
+    
+      <a 
         href="/tags/os/" 
         title="os">
         <div class="tags-list-item">os</div>
@@ -1029,15 +1069,15 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
       </a>
     
       <a 
-        href="/tags/cn/" 
-        title="cn">
-        <div class="tags-list-item">cn</div>
-      </a>
-    
-      <a 
         href="/tags/algs/" 
         title="algs">
         <div class="tags-list-item">algs</div>
+      </a>
+    
+      <a 
+        href="/tags/cn/" 
+        title="cn">
+        <div class="tags-list-item">cn</div>
       </a>
     
   </div>
@@ -1073,23 +1113,23 @@ concatenate the lists <span class="token class-name">B</span><span class="token 
   <div class="recent-posts-list">
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/cn/"><div class="recent-posts-item-content">cn</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/db/"><div class="recent-posts-item-content">database</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/cs/"><div class="recent-posts-item-content">cs</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/os/"><div class="recent-posts-item-content">OS</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/db/"><div class="recent-posts-item-content">db</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/java/"><div class="recent-posts-item-content">java</div></a>
       </div>
     
       <div class="recent-posts-item">
-        <div class="recent-posts-item-title">2018-06-03</div>
-        <a href="/2018/06/03/java/"><div class="recent-posts-item-content">java</div></a>
+        <div class="recent-posts-item-title">2022-07-17</div>
+        <a href="/cs/aqad/"><div class="recent-posts-item-content">a question a day</div></a>
       </div>
     
   </div>
